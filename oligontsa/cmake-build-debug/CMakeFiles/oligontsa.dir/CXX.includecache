@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/osa.cpp
+iostream
+-
+string
+-
+fstream
+-
+cmath
+-
+cstdlib
+-
+osa.h
+/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/osa.h
+vector
+-
+
+/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/osa.h
+
