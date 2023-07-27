@@ -1,6 +1,10 @@
 *<h1> Oligonucleotide_Aligner</h1>*</br>
 C++ &amp; Python</br>
 
+DNA is made of double helical strands of acidic nucleotides polymerized by phosphoric acid molecules alternating with furanose deoxyribose sugar to form the backbone of each strand. These backbones are connected at the base by pairs of four nitrogenous bases molecules, that could be one purine (Adenine or Guanine), bonded with cyclohexane ring of one pyrimidine (Cytosine or Thymine).</br> 
+
+RNA, on the other hand, is a single-strand polymer of phosphoric acid alternating with furanose ribose sugar with the addition of Hydroxyl group on Carbon 2 prime comapred to DNA and replacing Thymine nitrogenous base with Uracil.</br> 
+
 This tool will provide two different C++ builts to compare oligonucleotides sequence alignment with scoring system. One envision will allow you to enter the sequence on the prompt & other accept sequence files (w/wo) headers which will be aligned to the length of shorter sequence.</br>
 
 The python code was translate the file reader envision to python intrepeter.</br>
