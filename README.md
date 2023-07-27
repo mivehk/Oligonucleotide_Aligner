@@ -5,7 +5,7 @@ DNA is made of double helical strands of acidic nucleotides polymerized by phosp
 
 RNA, on the other hand, is a single-strand polymer of phosphoric acid alternating with furanose ribose sugar with the addition of Hydroxyl group on Carbon 2 prime comapred to DNA and replacing Thymine nitrogenous base with Uracil.</br> 
 
-This tool will provide two different C++ builts to compare oligonucleotides sequence alignment with scoring system. One envision will allow you to enter the sequence on the prompt & other accept sequence files (w/wo) headers which will be aligned to the length of shorter sequence.</br>
+This tool will provide two different C++ builts to compare oligonucleotides sequence alignment with scoring system. One envision will allow you to enter the sequence on the prompt & other accept sequence files (w/wo) headers which will be trimmed to shorter sequence length.</br>
 
 The python code was translate the file reader envision to python intrepeter.</br>
 ```
