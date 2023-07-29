@@ -7,7 +7,7 @@ RNA, on the other hand, is a single-strand polymer of phosphoric acid alternatin
 
 This tool will provide two different C++ builts to compare oligonucleotides sequence alignment with scoring system. One envision will allow you to enter the sequence on the prompt & other accept sequence files (w/wo) headers which will be trimmed to shorter sequence length.</br>
 
-We also provided a python suites to translate the oligonucleotide sequence reader for python intrepeter.</br>
+We also provided a Python suite to translate the oligonucleotide sequence reader for python intrepeter.</br>
 
 ```
 Top Sequence is called seq1 and Bottom sequence is seq2
