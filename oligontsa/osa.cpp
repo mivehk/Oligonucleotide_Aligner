@@ -113,6 +113,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
    string fing3= fing1 ;
    string fing4 = fing2;
 
+   /*
+    substr hop = 0, 1, ... 10
+    Index position = 0, 1, ... 10
+    K count = 1, 2, ... 11
+   */
 
     //started conditional printing==============================
     //first and sixth condition for equal oligo length
@@ -141,7 +146,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout<< endl;
         cout<<"The score is "<< static_cast<double>(ps1/l1) << endl;
     }
-    if(l2 == l1 and d1>1 and r1>0) {
+    if(l2 == l1 and d1>1 and r1>0){
         double ps6=0;
         double ss6=0;
         //cout<<"shish \n";
@@ -196,10 +201,10 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     map<int, double> score2;
     double max2 = std::numeric_limits<double>::min();
     int max2_ind2 = 0;
-    if(l1>l2 and d2<1 ) {
-        for (int k=1; k<(l1-l2); k++){
+    if(l1>l2 and d2<1 ){
+        for (int k=1; k<(l1-1); k++){
             //Hopping nucleotides in each k iteration along nucleic acid to find similarity and score.
-            fing3= fing3.substr(1);
+            if (k !=1) {fing3 = fing3.substr(1);}
             double ps2 = 0;
             double ss2 = 0;
             //dropped fs-printing from here
@@ -226,14 +231,15 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
             //cout<<pair.first<<endl;
         }
+        //index 0 in seq is nc one which is at zero hop, so k one is at first bit
         if (max2 != std::numeric_limits<int>::min()) {
-            cout << "The best score is at "<< max2_ind2 << "which is " <<max2 <<endl;
+            cout << "The best score is at "<< max2_ind2-1 << "th nc which is " <<max2 <<endl;
         } else {
             cout << "The map is empty." << std::endl;
         }
     }
     if(l1>l2 and d2<1){
-        fing1= fing1.substr(max2_ind2 );
+        fing1= fing1.substr(max2_ind2-1 );
         double ps2 = 0;
         double ss2 = 0;
         cout<<"oligonucleotides one till " <<l2 <<endl;
@@ -256,20 +262,20 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout <<fing2[j] << " ";
         }
         cout<< endl;
-        cout << "The score is "<<static_cast<double>(ps2/l2) <<endl;
+        cout << "The calculated score is "<<static_cast<double>(ps2/l2) <<endl;
      }
     //========================================================
     //fourth condition for when l1 is larger and l2 is not short
     map <int, double> score4;
-    double max4 = 0.0;
-    int max4_ind4 = 1;
-    if(l1>l2 and d2 >= 1 and r2>0 ) {
-        for (int k=1; k<(l1-l2) ; k++){
-            fing3= fing3.substr(1);
+    double max4 = std::numeric_limits<double>::min();
+    int max4_ind4 = 0;
+    if(l1>l2 and d2 >= 1 and r2>0 ){
+        for (int k=1; k<(l1-1) ; k++){
+            if (k!= 1) {fing3= fing3.substr(1);}
             double ps4;
             double ss4;
                 for(int m=0; m<l2 ; m++){
-                    if(fing1[m] == fing2[m]){
+                    if(fing3[m] == fing4[m]){
                         //cout <<"| ";
                         ps4++;
                     }else{
@@ -280,7 +286,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
             //cout<<endl;
             //cout << "The score is "<<static_cast<double>(ps4/l2) <<endl;
-            score4.insert(make_pair(k+1, static_cast<double>(ps4/l2)));
+            score4.insert(make_pair(k, static_cast<double>(ps4/l2)));
+            //cout<<static_cast<double>(ps4/l2)<<endl;
         }
         //double max = 0.0;
 
@@ -291,12 +298,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
         //cout << "The score is "<< max <<endl;
-        cout << "The best score is at "<< max4_ind4 << "which is " <<max4 <<endl;
+        cout << "The best score is at "<< max4_ind4-1 << "th nc which is " <<max4 <<endl;
     }
     if(l1>l2 and d2 >= 1 and r2>0){
          double ps4;
          double ss4;
-         fing1= fing1.substr(max4_ind4 );
+         fing1= fing1.substr(max4_ind4-1 );
          //cout<<"chohaar \n";
          for( int i=0; i<d2; i++){
              doc = 35 * M;
@@ -347,28 +354,28 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     //========================================================
     //Third condition for when l2 is larger and l1 is short
     map <int, double> score3;
-    double max3 = 0.0;
-    int max3_ind3 = 1;
+    double max3 = std::numeric_limits<double>::min();
+    int max3_ind3 = 0;
     if(l1<l2 and d1<1){
-        for (int k=1; k<(l2-l1) ; k++) {
-            fing4 = fing4.substr(1);
+        for (int k=1; k<(l2-1) ; k++) {
+           if (k != 1) {fing4 = fing4.substr(1);}
             double ps3 = 0;
             double ss3 = 0;
             //cout<<"oligonucleotides one till " <<l1 <<endl;
             //fs is not needed
-            for(int k=0 ; k<l2; k++ ){
-                if(fing1[k]==fing2[k]){
+            for(int k=0 ; k<l1; k++ ){
+                if(fing3[k]==fing4[k]){
                     //cout<<"| ";
-                    ps3++;
+                    ps3 ++;
                 }else{
                     //cout<<"  ";
-                    ss3++;
+                    ss3 ++;
                 }
             }
             //cout<< endl;
            //ss is not needed
             //cout << "The score is "<<static_cast<double>(ps3/l1) <<endl;
-            score3.insert(make_pair(k+1, static_cast<double>(ps3/l1)));
+            score3.insert(make_pair(k, static_cast<double>(ps3/l1)));
         }
         for (const auto& pair : score3) {
             if (pair.second > max3) {
@@ -376,10 +383,10 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 max3_ind3 = pair.first;
             }
         }
-        cout << "The best score is at "<< max3_ind3 << "which is " << max3 <<endl;
+        cout << "The best score is at "<< max3_ind3-1 << "th hop which is " << max3 <<endl;
     }
     if(l1<l2 and d1<1){
-        fing2 = fing2.substr(max3_ind3);
+        fing2 = fing2.substr(max3_ind3-1);
         double ps3 = 0;
         double ss3 = 0;
         cout<<"oligonucleotides one till " <<l1 <<endl;
@@ -407,21 +414,22 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     //========================================================
     //Fifth condition for when l2 is larger and l1 is not short
     map <int, double> score5;
-    double max5 = 0.0;
-    int max5_ind5 = 1;
+    double max5 = 0.0; //std::numeric_limits<double>::min();
+    int max5_ind5 = 0;
     if(l1<l2 and d1 >= 1 and r1>0 ){
-        for (int k=1; k<(l2-l1) ; k++) {
-            fing4 = fing4.substr(1);
+        for (int k=1; k<(l2-1) ; k++) {
+            if (k != 1 ) {fing4 = fing4.substr(1);}
             double ps5 =0;
             double ss5 =0;
             //cout<<"panj \n";
-            for( int i=0; i<d1; i++){
-                doc = 35 * M;
-                iam = 35 * G;
+            //for( int i=0; i<d1; i++){
+               // doc = 35 * M;
+                //iam = 35 * G;
                 //cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
                 //cout <<endl;
-                for(int k=iam; k<doc ; k++){
-                    if(fing1[k] ==fing2[k]){
+                //for(int k=iam; k<doc ; k++){
+                for (int m=0 ; m <l1; m++){
+                    if(fing3[m] ==fing4[m]){
                         //cout <<"| ";
                         ps5++;
                     }else{
@@ -431,30 +439,30 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 }
                 //cout << endl;
                 //cout <<endl;
-                M = M + 1;
-                G = G + 1;
-            }
+               // M = M + 1;
+                //G = G + 1;
+           // }
             //cout<< "Line " <<d1+1 <<" include nucleotides "<< doc+1<<" till "<<l1 << endl;
-            for(int i=doc ; i<l1; i++){
+            //for(int i=doc ; i<l1; i++){
                 //cout<< fing1[i] << " ";
-            }
+            //}
            // cout<<endl;
-            for(int i=doc ; i<l1; i++){
-                if(fing1[i] == fing2[i]) {
+           // for(int i=doc ; i<l1; i++){
+               // if(fing1[i] == fing2[i]) {
                     //cout << "| ";
-                    ps5++;
-                }else{
+                  //  ps5++;
+             //   }else{
                    // cout<< "  ";
-                    ss5++;
-                }
-            }
+                  //  ss5++;
+              //  }
+           // }
             //cout<<endl;
-            for(int i=doc ; i<l1; i++){
+           // for(int i=doc ; i<l1; i++){
                 //cout<< fing2[i] << " ";
-            }
+           // }
             //cout<<endl;
             //cout << "The score is "<<static_cast<double>(ps5/l1) <<endl;
-            score5.insert(make_pair(k+1, static_cast<double>(ps5/l1)));
+            score5.insert(make_pair(k, static_cast<double>(ps5/l1)));
         }
         for (const auto& pair : score5) {
             if (pair.second > max5) {
@@ -462,10 +470,10 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 max5_ind5 = pair.first;
             }
         }
-        cout << "The best score is at "<< max5_ind5 << "which is " <<max5 <<endl;
+        cout << "The best score is at "<< max5_ind5-1 << "th hop which is " <<max5 <<endl;
     }
     if(l2>l1 and d1 >= 1 and r1>0){
-        fing2= fing2.substr(max5_ind5 );
+        fing2= fing2.substr(max5_ind5-1 );
         double ps5 =0;
         double ss5 =0;
         //cout<<"panj \n";
