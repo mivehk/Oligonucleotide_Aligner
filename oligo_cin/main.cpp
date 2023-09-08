@@ -20,8 +20,8 @@ int main() {
     //cin >> s2;
     //cin.getline(s2 ,1025 , '\n');
     getline( cin, s2 );
-    /*The line "cin.getline(s1,101,'\n')" uses cin member function "getline()" reads into a character array "char[]" untill \n or 101 char,
-     * while the line "getline(cin,s2,'\n')" uses global getline() function from <string> header reads into a string object.*/
+    /*The line "cin.getline(s1,101,'\n')" uses cin member function of c-string "getline()" reads into a character array "char[]" until \n or 101 char,
+     * while the line "getline(cin,s2,'\n')" uses global getline() function of standard string class (<string> header) to read into a string object.*/
     while (!s2.empty() && s2.back() =='\n' ){
         cin.ignore(1);
     }
