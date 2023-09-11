@@ -23,6 +23,15 @@ int count_lines(ifstream& file){
     return lc;
 }
 
+int findMax(int x , int y, int z){
+    return max(max(x,y), z);
+}
+
+int isLetterMatch (char a , char b){
+    return(a==b)? 1 : -1;
+}
+
+
 void compare_sequences(string sequ1 ,string sequ2 ) {
 
     cout << endl;
@@ -101,13 +110,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int doc = 35 ;
     int iam = 0;
 
-   /* cout<<l1 <<endl;
+    cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
-    cout<<r2 <<endl; */
-
+    cout<<r2 <<endl;
 
     string temp1 = fing1;
     string temp2 = fing2;
@@ -120,6 +128,49 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
     //started conditional printing==============================
     //first and sixth condition for equal oligo length
+    vector<vector<int>> matrix( l1+1, vector<int>(l2+1));
+
+   /* for(int i=0; i<=l1; i++){
+        matrix[i][0] = i * -1;
+    }
+    for(int j=0; j<= l2; j++){
+        matrix[0][j] = j * -1;
+    }
+
+    for (int i = 1; i <= l1; i++) {
+        for (int j = 1; j <= l2; j++) {
+            int scoreDiagonal = matrix[i - 1][j - 1] + isLetterMatch(fing1[i - 1], fing2[j - 1]);
+            int scoreUp = matrix[i - 1][j] - 1;
+            int scoreLeft = matrix[i][j - 1] - 1;
+            matrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
+        }
+    }
+
+    int i = l1;
+    int j = l2;
+    string alignedfing1 = "";
+    string alignedfing2 = "";
+
+    while (i > 0 || j > 0) {
+    //while (i == j and  i > 0 ){
+        if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
+            alignedfing1  = fing1[i - 1] + alignedfing1;
+            alignedfing2 = "-" + alignedfing2;
+            i--;
+        } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
+            alignedfing1  = "-" + alignedfing1;
+            alignedfing2 = fing2[j - 1] + alignedfing2;
+            j--;
+        } else {
+            alignedfing1  = fing1[i - 1] + alignedfing1;
+            alignedfing2 = fing2[j - 1] + alignedfing2;
+            i--;
+            j--;
+        }
+    }
+    cout << "Sequence 1: " << alignedfing1 << endl;
+    cout << "Sequence 2: " << alignedfing2 << endl;*/
+
     if(l1 == l2 and d1<1){
         float ps1=0 ;
         float ss1=0 ;
@@ -200,7 +251,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     map<int, float> score2;
     float max2 = std::numeric_limits<float>::min();
     int max2_ind2 = 0;
-    vector<int> ST2;
+    vector<int> ST2 ={};
     bool multi2;
     if(l1>l2 and d2<1){
         for (int k=1; k<(l1-1); k++){
@@ -224,6 +275,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         for (const auto& pair : score2) {
             if (pair.second > max2) {
+                ST2.clear();
                 max2 = pair.second;
                 max2_ind2 = pair.first;
                 ST2.push_back(max2_ind2);
@@ -238,12 +290,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         if (max2 != std::numeric_limits<int>::min() and multi2 != true ) {
             cout << "The best score is at "<< max2_ind2 << "th nc which is " <<max2 <<endl;
         } else if (max2 != std::numeric_limits<int>::min() and multi2 == true ) {
-            cout << "The best score is at multiple loci: "<<endl;
+            cout << "The best score is "<< max2 <<" at multiple loci: "<<endl;
                 for ( int i=0 ; i<ST2.size() ; i+=1){
                     cout<<" in locus " << ST2[i]  <<endl;
                 }
-
-                    cout << "with score value of " << max2 <<endl;
+                   //cout << "with score value of " << max2 <<endl;
         } else {
             cout << "The map is empty." << std::endl;
         }
@@ -279,6 +330,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         //}
         cout<< endl;
         //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
+        ST2.clear();
      }
     //========================================================
     //fourth condition for when l1 is larger and l2 is not short
@@ -376,7 +428,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     map <int, float> score3;
     float max3 = std::numeric_limits<float>::min();
     int max3_ind3 = 0;
-    vector<int> ST3;
+    vector<int> ST3 ={};
     bool multi3;
     if(l1<l2 and d1<1){
         for (int k=1; k<(l2-1) ; k++) {
@@ -401,6 +453,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         for (const auto& pair : score3) {
             if (pair.second > max3) {
+                ST3.clear();
                 max3 = pair.second;
                 max3_ind3 = pair.first;
                 ST3.push_back(max3_ind3);
@@ -413,11 +466,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         if (max3 != std::numeric_limits<int>::min() and multi3 != true ) {
             cout << "The best score is at "<< max3_ind3 << "th nc which is " <<max3 <<endl;
         } else if (max3 != std::numeric_limits<int>::min() and multi3 == true ) {
-            cout << "The best score is at multiple loci: "<<endl;
+            cout << "The best score is "<< max3 <<" at multiple loci: "<<endl;
             for ( int i=0 ; i<ST3.size() ; i+=1){
                 cout<<" in locus " << ST3[i]  <<endl;
             }
-            cout << "with score value of " << max3 <<endl;
+            //cout << "with score value of " << max3 <<endl;
         } else {
             cout << "The map is empty." << std::endl;
         }
@@ -448,6 +501,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<< endl;
         cout << "The score is "<<static_cast<float>(ps3/l1) <<endl;
+        ST3.clear();
     }
     //========================================================
     //Fifth condition for when l2 is larger and l1 is not short
