@@ -111,15 +111,13 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int doc = 35 ;
     int iam = 0;
 
-    /*
+
     cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
     cout<<r2 <<endl;
-    */
-
 
    /*
     substr hop = 0, 1, ...
@@ -128,12 +126,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     (Max_ind increments only if score g8t max and it is one plus hops)
    */
 
-    //started conditional printing==============================
-    //Needleman Wunsch implementation
+    //=======================started conditional printing==============================
+    //==================Needleman Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
 
     //number of rows and colomns are plus one for when we initialize first row/column.
-    vector<vector<int>> matrix( l2+1, vector<int>(l1+1));
+    /*vector<vector<int>> matrix( l2+1, vector<int>(l1+1));
 
     //initialized first col
     for(int i=0; i<=l2; i++){
@@ -177,25 +175,27 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             i--;
             j--;
         }
-    }
+    }*/
     //cout << "Sequence 1: " << alignedfing1 << endl;
     //cout << "Sequence 2: " << alignedfing2 << endl;
-    string temp1 = alignedfing1;
-    string temp2 = alignedfing2;
+    string temp1 = fing1;
+    string temp2 = fing2;
+    //string temp1 = alignedfing1;
+    //string temp2 = alignedfing2;
 
    //=======================================================
     //first and sixth condition for equal oligo length
-   if(l1 == l2 and d1<1){
+    if(l1 == l2 and d1<1){
         float ps1=0 ;
         float ss1=0 ;
         cout<<"oligonucleotides one till " <<l1 <<endl;
         //cout << "yek \n";
         for(int i=0; i<l2 ; i++){
-           cout <<alignedfing1[i] << " ";
+           cout <<fing1[i] << " ";
         }
         cout<<endl;
         for(int k=0 ; k<l1; k++ ){
-            if(alignedfing1[k]==alignedfing2[k]){
+            if(fing1[k]==fing2[k]){
                 cout<<"| ";
                 ps1= ps1+1;
             }else{
@@ -205,7 +205,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
       cout<< endl;
         for(int j=0 ;j<l2; j++){
-            cout <<alignedfing2[j] << " ";
+            cout <<fing2[j] << " ";
         }
         cout<< endl;
         cout<<"The score is "<< static_cast<float>(ps1/l1) << endl;
@@ -219,11 +219,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             iam = 35 * G;
             cout << "Line "<< i+1 <<" include nucleotides "<<iam+1 <<" till "<<doc <<endl;
             for(int j=iam; j<doc ; j++){
-                cout<< alignedfing1[j] <<" ";
+                cout<< fing1[j] <<" ";
             }
             cout<< endl;
             for(int k=iam; k<doc; k++) {
-                if (alignedfing1[k] == alignedfing2[k]) {
+                if (fing1[k] == fing2[k]) {
                     cout << "| ";
                     ps6++;
                 } else {
@@ -233,7 +233,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
             cout<<endl;
             for(int a=iam; a<doc; a++){
-                cout<<alignedfing2[a] << " ";
+                cout<<fing2[a] << " ";
             }
             cout<<endl;
             M = M + 1;
@@ -241,11 +241,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout <<"Line "<< d1+1 <<" include nucleotides "<<doc+1<<" till "<<l2 <<endl;
         for(int i=doc ; i<l1; i++){
-            cout<< alignedfing1[i] << " ";
+            cout<< fing1[i] << " ";
         }
         cout<<endl;
         for(int i=doc ; i<l1; i++){
-            if(alignedfing1[i] == alignedfing2[i]) {
+            if(fing1[i] == fing2[i]) {
                 cout << "| ";
                 ps6++;
             }else{
@@ -255,7 +255,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<<endl;
         for(int i=doc ; i<l1; i++){
-            cout<< alignedfing2[i] << " ";
+            cout<< fing2[i] << " ";
         }
         cout<<endl;
         cout << "The score is "<<static_cast<float>(ps6/l2) <<endl;
@@ -389,18 +389,18 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     if(l1>l2 and d2 >= 1 and r2>0){
          float ps4 = 0;
          float ss4 = 0;
-         alignedfing1= alignedfing1.substr(max4_ind4-1 );
+         fing1= fing1.substr(max4_ind4-1 );
          //cout<<"chohaar \n";
          for( int i=0; i<d2; i++){
              doc = 35 * M;
              iam = 35 * G;
              cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
              for(int k=iam; k<doc ; k++){
-                 cout << alignedfing1[k] << " ";
+                 cout << fing1[k] << " ";
              }
              cout <<endl;
              for(int k=iam; k<doc ; k++){
-                 if(alignedfing1[k] == alignedfing2[k]){
+                 if(fing1[k] == fing2[k]){
                      cout <<"| ";
                      ps4++;
                  }else{
@@ -410,7 +410,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
              }
              cout << endl;
              for(int k=iam; k<doc ; k++){
-                 cout << alignedfing2[k] << " ";
+                 cout << fing2[k] << " ";
              }
              cout <<endl;
              M = M + 1;
@@ -418,11 +418,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
          }
          cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
          for(int i=doc ; i<l2; i++){
-             cout<< alignedfing1[i] << " ";
+             cout<< fing1[i] << " ";
          }
          cout<<endl;
          for(int i=doc ; i<l2; i++){
-             if(alignedfing1[i] == alignedfing2[i]) {
+             if(fing1[i] == fing2[i]) {
                  cout << "| ";
                  ps4++;
              }else{
@@ -432,7 +432,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
          }
          cout<<endl;
          for(int i=doc ; i<l2; i++){
-             cout<< alignedfing2[i] << " ";
+             cout<< fing2[i] << " ";
          }
          cout<<endl;
          cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
