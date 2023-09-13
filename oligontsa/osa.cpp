@@ -216,7 +216,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     map<int, float> score2;
     float max2 = std::numeric_limits<float>::min();
     int max2_ind2 = 0;
-    vector<int> ST2 ={};
+    vector<int> ST2 ;
     bool multi2;
     if(l1>l2 and d2<1){
         for (int k=1; k<(l1-1); k++){
@@ -338,256 +338,13 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         //cout << "The score is "<< max <<endl;
         cout << "The best Identical Site start at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
     }
-    /*if(l1>l2 and d2 >= 1 and r2>0){
-         float ps4 = 0;
-         float ss4 = 0;
-         fing1= fing1.substr(max4_ind4-1 );
-         //cout<<"chohaar \n";
-         for( int i=0; i<d2; i++){
-             doc = 35 * M;
-             iam = 35 * G;
-             cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
-             for(int k=iam; k<doc ; k++){
-                 cout << fing1[k] << " ";
-             }
-             cout <<endl;
-             for(int k=iam; k<doc ; k++){
-                 if(fing1[k] == fing2[k]){
-                     cout <<"| ";
-                     ps4++;
-                 }else{
-                     cout<<": ";
-                     ss4++;
-                 }
-             }
-             cout << endl;
-             for(int k=iam; k<doc ; k++){
-                 cout << fing2[k] << " ";
-             }
-             cout <<endl;
-             M = M + 1;
-             G = G + 1;
-         }
-         cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
-         for(int i=doc ; i<l2; i++){
-             cout<< fing1[i] << " ";
-         }
-         cout<<endl;
-         for(int i=doc ; i<l2; i++){
-             if(fing1[i] == fing2[i]) {
-                 cout << "| ";
-                 ps4++;
-             }else{
-                 cout<< ": ";
-                 ss4++;
-             }
-         }
-         cout<<endl;
-         for(int i=doc ; i<l2; i++){
-             cout<< fing2[i] << " ";
-         }
-         cout<<endl;
-         cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
-     }*/
-    //========================================================
-    //Third condition for when l2 is larger and l1 is short
-   /* map <int, float> score3;
-    float max3 = std::numeric_limits<float>::min();
-    int max3_ind3 = 0;
-    vector<int> ST3 ={};
-    bool multi3;
-    if(l1<l2 and d1<1){
-        for (int k=1; k<(l2-1) ; k++) {
-           if (k != 1) {temp2 = temp2.substr(1);}
-            float ps3 = 0;
-            float ss3 = 0;
-            //cout<<"oligonucleotides one till " <<l1 <<endl;
-            //fs is not needed
-            for(int k=0 ; k<l1; k++ ){
-                if(temp1[k]==temp2[k]){
-                    //cout<<"| ";
-                    ps3 ++;
-                }else{
-                    //cout<<"  ";
-                    ss3 ++;
-                }
-            }
-            //cout<< endl;
-           //ss is not needed
-            //cout << "The score is "<<static_cast<float>(ps3/l1) <<endl;
-            score3.insert(make_pair(k, static_cast<float>(ps3/l1)));
-        }
-        for (const auto& pair : score3) {
-            if (pair.second > max3) {
-                ST3.clear();
-                max3 = pair.second;
-                max3_ind3 = pair.first;
-                ST3.push_back(max3_ind3);
-            } else if ( pair.second == max3 ){
-                multi3 = true;
-                max3 = pair.second;
-                ST3.push_back(pair.first);
-            }
-        }
-        if (max3 != std::numeric_limits<int>::min() and multi3 != true ) {
-            cout << "The best score is at "<< max3_ind3 << "th nc which is " <<max3 <<endl;
-        } else if (max3 != std::numeric_limits<int>::min() and multi3 == true ) {
-            cout << "The best score is "<< max3 <<" at multiple loci: "<<endl;
-            for ( int i=0 ; i<ST3.size() ; i+=1){
-                cout<<" in locus " << ST3[i]  <<endl;
-            }
-            //cout << "with score value of " << max3 <<endl;
-        } else {
-            cout << "The map is empty." << std::endl;
-        }
-    }
-    if(l1<l2 and d1<1){
-        fing2 = fing2.substr(max3_ind3-1);
-        float ps3 = 0;
-        float ss3 = 0;
-        cout<<"Query oligonucleotides one till " <<l1 <<endl;
-        //cout << "se \n";
-        int xy3= ST3[0];
-        for(int i=xy3-1; i<l1 ; i++){
-            cout <<fing1[i] << " ";
-        }
-        cout<<endl;
-        for(int k=xy3-1 ; k<l1; k++ ){
-            if(fing1[k]==fing2[k]){
-                cout<<"| ";
-                ps3++;
-            }else{
-                cout<<"  ";
-                ss3++;
-            }
-        }
-        cout<< endl;
-        for(int j=xy3-1 ;j<l1; j++){
-            cout <<fing2[j] << " ";
-        }
-        cout<< endl;
-        cout << "The score is "<<static_cast<float>(ps3/l1) <<endl;
-        ST3.clear();
-    }
-    //========================================================
-    //Fifth condition for when l2 is larger and l1 is not short
-    map <int, float> score5;
-    float max5 = 0.0; //std::numeric_limits<float>::min();
-    int max5_ind5 = 0;
-    if(l1<l2 and d1 >= 1 and r1>0 ){
-        for (int k=1; k<(l2-1) ; k++) {
-            if (k != 1 ) {temp2 = temp2.substr(1);}
-            float ps5 =0;
-            float ss5 =0;
-            //cout<<"panj \n";
-            //for( int i=0; i<d1; i++){
-               // doc = 35 * M;
-                //iam = 35 * G;
-                //cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
-                //cout <<endl;
-                //for(int k=iam; k<doc ; k++){
-                for (int m=0 ; m <l1; m++){
-                    if(temp1[m] ==temp2[m]){
-                        //cout <<"| ";
-                        ps5++;
-                    }else{
-                        //cout<<"  ";
-                        ss5++;
-                    }
-                }
-                //cout << endl;
-                //cout <<endl;
-               // M = M + 1;
-                //G = G + 1;
-           // }
-            //cout<< "Line " <<d1+1 <<" include nucleotides "<< doc+1<<" till "<<l1 << endl;
-            //for(int i=doc ; i<l1; i++){
-                //cout<< fing1[i] << " ";
-            //}
-           // cout<<endl;
-           // for(int i=doc ; i<l1; i++){
-               // if(fing1[i] == fing2[i]) {
-                    //cout << "| ";
-                  //  ps5++;
-             //   }else{
-                   // cout<< "  ";
-                  //  ss5++;
-              //  }
-           // }
-            //cout<<endl;
-           // for(int i=doc ; i<l1; i++){
-                //cout<< fing2[i] << " ";
-           // }
-            //cout<<endl;
-            //cout << "The score is "<<static_cast<float>(ps5/l1) <<endl;
-            score5.insert(make_pair(k, static_cast<float>(ps5/l1)));
-        }
-        for (const auto& pair : score5) {
-            if (pair.second > max5) {
-                max5 = pair.second;
-                max5_ind5 = pair.first;
-            }
-        }
-        cout << "The best score is at "<< max5_ind5 << "th hop which is " <<max5 <<endl;
-    }
-    if(l2>l1 and d1 >= 1 and r1>0){
-        fing2= fing2.substr(max5_ind5-1 );
-        float ps5 =0;
-        float ss5 =0;
-        //cout<<"panj \n";
-        for( int i=0; i<d1; i++){
-            doc = 35 * M;
-            iam = 35 * G;
-            cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
-            for(int k=iam; k<doc ; k++){
-                cout << fing1[k] << " ";
-            }
-            cout <<endl;
-            for(int k=iam; k<doc ; k++){
-                if(fing1[k] ==fing2[k]){
-                    cout <<"| ";
-                    ps5++;
-                }else{
-                    cout<<"  ";
-                    ss5++;
-                }
-            }
-            cout << endl;
-            for(int k=iam; k<doc ; k++){
-                cout << fing2[k] << " ";
-            }
-            cout <<endl;
-            M = M + 1;
-            G = G + 1;
-        }
-        cout<< "Line " <<d1+1 <<" include nucleotides "<< doc+1<<" till "<<l1 << endl;
-        for(int i=doc ; i<l1; i++){
-            cout<< fing1[i] << " ";
-        }
-        cout<<endl;
-        for(int i=doc ; i<l1; i++){
-            if(fing1[i] == fing2[i]) {
-                cout << "| ";
-                ps5++;
-            }else{
-                cout<< "  ";
-                ss5++;
-            }
-        }
-        cout<<endl;
-        for(int i=doc ; i<l1; i++){
-            cout<< fing2[i] << " ";
-        }
-        cout<<endl;
-        cout << "The score is "<<static_cast<float>(ps5/l1) <<endl;
-    }*/
     cout<<endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
     //==================Needleman-Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
 
     //number of rows and colomns are plus one for when we initialize first row/column.
-        vector<vector<int>> matrix( l2+1, vector<int>(l1+1));
+        vector<vector<int> > matrix( l2+1, vector<int>(l1+1));
 
         //initialized first col
         for(int i=0; i<=l2; i++){
@@ -614,7 +371,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         string nwfing1 = fing1.substr(max4_ind4-1 );
         string nwfing2 = fing2;
         cout << "Primary Sequence 1: " << nwfing1 << endl;
+    cout<<"==================================================================================== \n";
         cout << "Primary Sequence 2: " << nwfing2 << endl;
+    cout<<"==================================================================================== \n";
         cout<<endl;
 
         string alignedfing1 = "";
@@ -642,8 +401,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         //}
         cout << "Secondary Sequence 1: " << alignedfing1 << endl;
+    cout<<"==================================================================================== \n";
         cout << "Secondary Sequence 2: " << alignedfing2 << endl;
-    cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
+    cout<<"==================================================================================== \n";
 
     if(l1>l2 and d2 >= 1 and r2>0){
         float ps4 = 0;
