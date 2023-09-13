@@ -111,13 +111,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int doc = 35 ;
     int iam = 0;
 
-
+    /*
     cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
     cout<<r2 <<endl;
+    */
 
    /*
     substr hop = 0, 1, ...
@@ -127,57 +128,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
    */
 
     //=======================started conditional printing==============================
-    //==================Needleman Wunsch implementation
-    /*Steps: initialization, matrix filling, backtracing and score generation.
 
-    //number of rows and colomns are plus one for when we initialize first row/column.
-    /*vector<vector<int>> matrix( l2+1, vector<int>(l1+1));
-
-    //initialized first col
-    for(int i=0; i<=l2; i++){
-        matrix[i][0] = i * -1;
-    }
-    //initializing first row
-    for(int j=0; j<= l1; j++){
-        matrix[0][j] = j * -1;
-    }
-    //post initialization matrix filling with insertion-score/deletion-penalty of -1 and match score one & miss penalty -1
-    for (int i = 1; i <= l2; i++) {
-        for (int j = 1; j <= l1; j++) {
-            int scoreDiagonal = matrix[i - 1][j - 1] + isLetterMatch(fing2[i - 1], fing1[j - 1]);
-            int scoreUp = matrix[i - 1][j] - 1; //insertion
-            int scoreLeft = matrix[i][j - 1] - 1; //deletion
-            matrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
-        }
-    }
-
-    //l2(alignedfing2) is query, and l1(alignedl1) is target
-    int i = l2;
-    int j = l1;
-    string alignedfing1 = "";
-    string alignedfing2 = "";
-
-
-    //backtracing
-    while (i > 0 || j > 0) {
-    //while (i == j and  i > 0 ){
-        if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
-            alignedfing1  = fing1[i - 1] + alignedfing1;
-            alignedfing2 = "-" + alignedfing2;
-            i--;
-        } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
-            alignedfing1  = "-" + alignedfing1;
-            alignedfing2 = fing2[j - 1] + alignedfing2;
-            j--;
-        } else {
-            alignedfing1  = fing1[i - 1] + alignedfing1;
-            alignedfing2 = fing2[j - 1] + alignedfing2;
-            i--;
-            j--;
-        }
-    }*/
-    //cout << "Sequence 1: " << alignedfing1 << endl;
-    //cout << "Sequence 2: " << alignedfing2 << endl; */
     string temp1 = fing1;
     string temp2 = fing2;
     //string temp1 = alignedfing1;
@@ -208,7 +159,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout <<fing2[j] << " ";
         }
         cout<< endl;
-        cout<<"The score is "<< static_cast<float>(ps1/l1) << endl;
+        cout<<"The Identical Site is "<< (static_cast<float>(ps1/l1))*100<<"%"<< endl;
     }
    if(l2 == l1 and d1>=1 and r1>0){
         float ps6=0;
@@ -258,7 +209,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout<< fing2[i] << " ";
         }
         cout<<endl;
-        cout << "The score is "<<static_cast<float>(ps6/l2) <<endl;
+        cout << "The Identical Site is "<<(static_cast<float>(ps6/l2))*100<<"%"<<endl;
     }
     //===================================================
     //second condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
@@ -302,9 +253,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         //index 0 in seq is nc one which is at zero hop, so k one is at first bit
         if (max2 != std::numeric_limits<int>::min() and multi2 != true ) {
-            cout << "The best score is at "<< max2_ind2 << "th nc which is " <<max2 <<endl;
+            cout << "The best Identical Site is at "<< max2_ind2 << "th nc which is " <<max2*100<<"%"<<endl;
         } else if (max2 != std::numeric_limits<int>::min() and multi2 == true ) {
-            cout << "The best score is "<< max2 <<" at multiple loci: "<<endl;
+            cout << "The best Identical Site is "<< max2*100 <<"% at multiple loci: "<<endl;
                 for ( int i=0 ; i<ST2.size() ; i+=1){
                     cout<<" in locus " << ST2[i]  <<endl;
                 }
@@ -385,7 +336,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
         //cout << "The score is "<< max <<endl;
-        cout << "The best score is at "<< max4_ind4 << "th nc which is " <<max4 <<endl;
+        cout << "The best Identical Site start at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
     }
     /*if(l1>l2 and d2 >= 1 and r2>0){
          float ps4 = 0;
@@ -632,7 +583,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     }*/
     cout<<endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
-    //==================Needleman Wunsch implementation
+    //==================Needleman-Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
 
     //number of rows and colomns are plus one for when we initialize first row/column.
@@ -662,8 +613,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
         string nwfing1 = fing1.substr(max4_ind4-1 );
         string nwfing2 = fing2;
-        cout << "Primary Sequence 1: " << nwfing1 << endl<<endl;
+        cout << "Primary Sequence 1: " << nwfing1 << endl;
         cout << "Primary Sequence 2: " << nwfing2 << endl;
+        cout<<endl;
 
         string alignedfing1 = "";
         string alignedfing2 = "";
@@ -689,7 +641,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 }
             }
         //}
-        cout << "Secondary Sequence 1: " << alignedfing1 << endl<<endl;
+        cout << "Secondary Sequence 1: " << alignedfing1 << endl;
         cout << "Secondary Sequence 2: " << alignedfing2 << endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
 
@@ -741,7 +693,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout<< alignedfing2[i] << " ";
         }
         cout<<endl;
-        cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
+        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
     }
 
     istrm1.close();
