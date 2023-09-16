@@ -175,7 +175,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         for(int i=0; i<d1; i++){
             doc = 35 * M;
             iam = 35 * G;
-            cout << "Line "<< i+1 <<" include nucleotides "<<iam+1 <<" till "<<doc <<endl;
+            cout << "Line "<< i+1 <<" include Query nucleotides "<<iam+1 <<" till "<<doc <<endl;
             for(int j=iam; j<doc ; j++){
                 cout<< fing1[j] <<" ";
             }
@@ -197,7 +197,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             M = M + 1;
             G = G + 1;
         }
-        cout <<"Line "<< d1+1 <<" include nucleotides "<<doc+1<<" till "<<l2 <<endl;
+        cout <<"Line "<< d1+1 <<" include Query nucleotides "<<doc+1<<" till "<<l2 <<endl;
         for(int i=doc ; i<l1; i++){
             cout<< fing1[i] << " ";
         }
@@ -361,7 +361,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     //Assists the highest optimal score to NW for best and secondary scores.
     map <int, float> score4;
     float max4 = std::numeric_limits<float>::min();
-    int *max4_ind4 ;
+    int max4_ind4;
     float ps4 ;
     float ss4 ;
     vector <int> ST4 ;
@@ -398,8 +398,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 //cout<<subopt_count<<endl;
                 ST4.clear();
                 max4 = pair.second;
-                max4_ind4 = &pair.first;
-                ST4.push_back(*max4_ind4);
+                max4_ind4 = pair.first;
+                ST4.push_back(max4_ind4);
             } else if ( pair.second == max4 ){
                 subopt_count =  pair.first;
                 multi4 = true;
@@ -409,7 +409,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //cout<<pair.first<<endl;
         }
         if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
-            cout << "The best Identical Site is at "<< *max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
+            cout << "The best Identical Site is at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
         } else if (max4 != std::numeric_limits<int>::min() and multi4 == true ) {
             cout << "The best Identical Site is "<< max4*100 <<"% at multiple loci: "<<endl;
             for ( int i=0 ; i<ST4.size() ; i+=1){
@@ -449,8 +449,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         int i = l2; //n
         int j = l1;  //m
 
-        string nwfing1 = fing1.substr(*max4_ind4-1 );
-        string nwfing3 = fing1.substr(0, *max4_ind4-2);
+        string nwfing1 = fing1.substr(max4_ind4-1 );
+        string nwfing3 = fing1.substr(0, max4_ind4-2);
         string nwfing2 = fing2;
         string nwfing4 = fing1.substr(subopt_count-1); //looking for index which is suboptimal location minus one
 
@@ -476,8 +476,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                     alignedfing4 = nwfing4[j - 1] + alignedfing4;
                     j--;
                 } else {
-                    alignedfing4  = nwfing4[i - 1] + alignedfing4;
-                    alignedfing2 = nwfing2[j - 1] + alignedfing2;
+                    alignedfing4  = nwfing4[j - 1] + alignedfing4;
+                    alignedfing2 = nwfing2[i - 1] + alignedfing2;
                     i--;
                     j--;
                 }
@@ -491,7 +491,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         for( int i=0; i<d2; i++){
             doc = 35 * M;
             iam = 35 * G;
-            cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
+            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
             for(int k=iam; k<doc ; k++){
                 cout << nwfing1[k] << " ";
             }
@@ -513,7 +513,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             M = M + 1;
             G = G + 1;
         }
-        cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
+        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
         for(int i=doc ; i<l2; i++){
             cout<< nwfing1[i] << " ";
         }
