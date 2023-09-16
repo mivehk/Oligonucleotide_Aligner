@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-bool isSeqNameValid (string& seqname) {
+/*bool isSeqNameValid (string& seqname) {
     for (char c: seqname) {
         //char c;
         if (isalnum(c) || c =='_' ){
@@ -11,7 +11,7 @@ bool isSeqNameValid (string& seqname) {
         }
     }
     return false;
-}
+}*/
 
 
 int main() {

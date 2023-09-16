@@ -28,10 +28,17 @@ int findMax(int x , int y, int z){
 }
 
 //Penalty and score values for each char used for pairwise sequences comparison
-int isLetterMatch (char a , char b){
+int isBPMatch (char a , char b){
     return(a==b)? 1 : -1;
 }
 
+const int MATCH_SCORE = 2;
+const int MISMATCH_SCORE = -1;
+const int GAP_PENALTY = -1;
+
+int swScore(char a, char b) {
+    return (a == b) ? MATCH_SCORE : MISMATCH_SCORE;
+}
 
 void compare_sequences(string sequ1 ,string sequ2 ) {
 
@@ -263,8 +270,59 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         } else {
             cout << "The map is empty." << std::endl;
         }
+
+        cout<<"===============Showing_Smith-Waterman_Alignment==============================================="<<endl;
+
+        string swfing1 = fing1.substr(max2_ind2-1 );
+        string swfing2 = fing2;
+        std::vector<std::vector<int>> swmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
+
+        int max_score = 0;
+        int max_i = 0;
+        int max_j = 0;
+
+        for (int i = 1; i <= l2; i++) {
+            for (int j = 1; j <= l1; j++) {
+                int match = swmatrix[i - 1][j - 1] + swScore(swfing1[i-1 ], swfing2[j-1 ]);
+                int gap_seq1 = swmatrix[i - 1][j] + GAP_PENALTY;
+                int gap_seq2 = swmatrix[i][j - 1] + GAP_PENALTY;
+                swmatrix[i][j] = std::max({0, match, gap_seq1, gap_seq2});
+
+                if (swmatrix[i][j] > max_score) {
+                    max_score = swmatrix[i][j];
+                    max_i = i;
+                    max_j = j;
+                }
+            }
+        }
+
+        std::string swaligned_seq1 = "";
+        std::string swaligned_seq2 = "";
+
+        int swi = max_i; //these two integer need to be swapped? think about why swi = max_j & swj = max_i
+        int swj = max_j;
+
+        while (swi > 0 && swj > 0 && swmatrix[swi][swj] != 0) {
+            if (swmatrix[swi][swj] == swmatrix[swi - 1][swj - 1] + swScore(swfing1[swi], swfing2[swj ])) {
+                swaligned_seq1 = swfing1[swi - 1] + swaligned_seq1;
+                swaligned_seq2 = swfing2[swj - 1] + swaligned_seq2;
+                swi--;
+                swj--;
+            } else if (swmatrix[swi][swj] == swmatrix[swi - 1][swj] + GAP_PENALTY) {
+                swaligned_seq1 = swfing1[swi - 1] + swaligned_seq1;
+                swaligned_seq2 = "-" + swaligned_seq2;
+                swi--;
+            } else {
+                swaligned_seq1 = "-" + swaligned_seq1;
+                swaligned_seq2 = swfing2[swj - 1] + swaligned_seq2;
+                swj--;
+            }
+        }
+
+        std::cout << "swAligned Sequence 1: " << swaligned_seq1 << std::endl;
+        std::cout << "swAligned Sequence 2: " << swaligned_seq2 << std::endl;
     }
-    if(l1>l2 and d2<1){
+    /*if(l1>l2 and d2<1){
         fing1= fing1.substr(max2_ind2-1 );
         float ps2 = 0;
         float ss2 = 0;
@@ -296,15 +354,19 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout<< endl;
         //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
         ST2.clear();
-     }
+     }*/
+
     //========================================================
     //fourth condition for when l1 is larger and l2 which is a read larger than 35bp (investigate structural variants e.g., INDEL)
     //Assists the highest optimal score to NW for best and secondary scores.
     map <int, float> score4;
     float max4 = std::numeric_limits<float>::min();
-    int max4_ind4 = 0;
+    int *max4_ind4 ;
     float ps4 ;
     float ss4 ;
+    vector <int> ST4 ;
+    bool multi4;
+    int subopt_count;
     if(l1>l2 and d2 >= 1 and r2>0 ){
         for (int k=1; k<(l1-1) ; k++){
             if (k!= 1) {temp1 = temp1.substr(1);}
@@ -328,23 +390,42 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         //cout << ss4 <<endl;
         //cout<< ps4 << endl;
         //float max = 0.0;
-
-        for (const auto& pair : score4) {
+        subopt_count = 1;
+        ST4.push_back(0);
+        for ( auto &pair : score4) {
             if (pair.second > max4) {
+                subopt_count =  ST4[0];
+                //cout<<subopt_count<<endl;
+                ST4.clear();
                 max4 = pair.second;
-                max4_ind4 = pair.first;
+                max4_ind4 = &pair.first;
+                ST4.push_back(*max4_ind4);
+            } else if ( pair.second == max4 ){
+                subopt_count =  pair.first;
+                multi4 = true;
+                max4 = pair.second;
+                ST4.push_back(pair.first);
             }
+            //cout<<pair.first<<endl;
         }
-        //cout << "The score is "<< max <<endl;
-        cout << "The best Identical Site start at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
+        if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
+            cout << "The best Identical Site is at "<< *max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
+        } else if (max4 != std::numeric_limits<int>::min() and multi4 == true ) {
+            cout << "The best Identical Site is "<< max4*100 <<"% at multiple loci: "<<endl;
+            for ( int i=0 ; i<ST4.size() ; i+=1){
+                cout<<" in locus " << ST4[i]  <<endl;
+            }
+        } else {
+            cout << "The map is empty." << std::endl;
+        }
     }
-    cout<<endl;
+    cout<<subopt_count<<endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
     //==================Needleman-Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
 
     //number of rows and colomns are plus one for when we initialize first row/column.
-        vector<vector<int> > matrix( l2+1, vector<int>(l1+1));
+        vector<vector<int> > matrix( l2+1, vector<int>(l1+1, 0));
 
         //initialized first col
         for(int i=0; i<=l2; i++){
@@ -357,7 +438,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         //post initialization matrix filling with insertion-score/deletion-penalty of -1 and match score one & miss penalty -1
         for (int i = 1; i <= l2; i++) {
             for (int j = 1; j <= l1; j++) {
-                int scoreDiagonal = matrix[i - 1][j - 1] + isLetterMatch(fing2[i - 1], fing1[j - 1]);
+                int scoreDiagonal = matrix[i - 1][j - 1] + isBPMatch(fing1[i-1], fing2[j-1]);
                 int scoreUp = matrix[i - 1][j] - 1; //insertion
                 int scoreLeft = matrix[i][j - 1] - 1; //deletion
                 matrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
@@ -365,45 +446,43 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         //l2(alignedfing2) is query, and l1(alignedl1) is target
-        int i = l2;
-        int j = l1;
+        int i = l2; //n
+        int j = l1;  //m
 
-        string nwfing1 = fing1.substr(max4_ind4-1 );
+        string nwfing1 = fing1.substr(*max4_ind4-1 );
+        string nwfing3 = fing1.substr(0, *max4_ind4-2);
         string nwfing2 = fing2;
-        cout << "Primary Sequence 1: " << nwfing1 << endl;
-    cout<<"==================================================================================== \n";
-        cout << "Primary Sequence 2: " << nwfing2 << endl;
-    cout<<"==================================================================================== \n";
-        cout<<endl;
+        string nwfing4 = fing1.substr(subopt_count-1); //looking for index which is suboptimal location minus one
 
-        string alignedfing1 = "";
+    cout << "Target Sequence - Chain One: " << nwfing3 << endl;
+    cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
+    cout<<"============================================================================================================= \n";
+    cout << "Query Sequence: " << nwfing2 << endl <<endl;
+    cout<<"======================Showing Top Candidate Alignment===================================================== \n";
+
+        string alignedfing4 = "";
         string alignedfing2 = "";
-
 
         //backtracing
         while (i > 0 || j > 0) {
         //while (i > 0 and j > 0) {
                 //while (i == j and  i > 0 ){
                 if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
-                    alignedfing1  = nwfing1[i - 1] + alignedfing1;
-                    alignedfing2 = "-" + alignedfing2;
+                    alignedfing2  = nwfing2[i - 1] + alignedfing2;
+                    alignedfing4 = "-" + alignedfing4;
                     i--;
                 } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
-                    alignedfing1  = "-" + alignedfing1;
-                    alignedfing2 = nwfing2[j - 1] + alignedfing2;
+                    alignedfing2  = "-" + alignedfing2;
+                    alignedfing4 = nwfing4[j - 1] + alignedfing4;
                     j--;
                 } else {
-                    alignedfing1  = nwfing1[i - 1] + alignedfing1;
+                    alignedfing4  = nwfing4[i - 1] + alignedfing4;
                     alignedfing2 = nwfing2[j - 1] + alignedfing2;
                     i--;
                     j--;
                 }
             }
         //}
-        cout << "Secondary Sequence 1: " << alignedfing1 << endl;
-    cout<<"==================================================================================== \n";
-        cout << "Secondary Sequence 2: " << alignedfing2 << endl;
-    cout<<"==================================================================================== \n";
 
     if(l1>l2 and d2 >= 1 and r2>0){
         float ps4 = 0;
@@ -414,11 +493,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             iam = 35 * G;
             cout<< "Line "<< i+1 <<" include nucleotides "<< iam+1 << " till " << doc <<endl ;
             for(int k=iam; k<doc ; k++){
-                cout << alignedfing1[k] << " ";
+                cout << nwfing1[k] << " ";
             }
             cout <<endl;
             for(int k=iam; k<doc ; k++){
-                if(alignedfing1[k] == alignedfing2[k]){
+                if(nwfing1[k] == nwfing2[k]){
                     cout <<"| ";
                     ps4++;
                 }else{
@@ -428,7 +507,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
             cout << endl;
             for(int k=iam; k<doc ; k++){
-                cout << alignedfing2[k] << " ";
+                cout << nwfing2[k] << " ";
             }
             cout <<endl;
             M = M + 1;
@@ -436,11 +515,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
         for(int i=doc ; i<l2; i++){
-            cout<< alignedfing1[i] << " ";
+            cout<< nwfing1[i] << " ";
         }
         cout<<endl;
         for(int i=doc ; i<l2; i++){
-            if(alignedfing1[i] == alignedfing2[i]) {
+            if(nwfing1[i] == nwfing2[i]) {
                 cout << "| ";
                 ps4++;
             }else{
@@ -450,11 +529,17 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<<endl;
         for(int i=doc ; i<l2; i++){
-            cout<< alignedfing2[i] << " ";
+            cout<< nwfing2[i] << " ";
         }
         cout<<endl;
         cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
     }
+    cout<<endl;
+    cout<<"======================Showing Needleman-Wunsch for suboptimal Alignment===================================================== \n";
+        cout << "Secondary Sequence 1: " << alignedfing4 << endl;
+    cout<<"==================================================================================== \n";
+        cout << "Secondary Sequence 2: " << alignedfing2 << endl;
+    cout<<"==================================================================================== \n";
 
     istrm1.close();
     istrm2.close();
