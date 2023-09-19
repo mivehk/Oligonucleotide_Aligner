@@ -32,7 +32,7 @@ The best Identical Site is 44.1176% at multiple loci:
  in locus 543
 ===============Showing Alignment Using Smith-Waterman===============================================
 Suboptimal Target Sequence 1: --A---GTGTGGCC-A-AGG----C-----C-TTTC-GTTC-
-Suboptimal Query Sequence 2 : CGAGAA-TG-TGC-CCGAG-GAGG-ACGGGAC-C-CGCTT-C
+Suboptimal Query Sequence  2: CGAGAA-TG-TGC-CCGAG-GAGG-ACGGGAC-C-CGCTT-C
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  
 
