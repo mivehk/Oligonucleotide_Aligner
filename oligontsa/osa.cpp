@@ -320,7 +320,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
-        std::cout << "Suboptimal Query Sequence 2: " << swaligned_seq2 << std::endl;
+        std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
     }
     /*if(l1>l2 and d2<1){
         fing1= fing1.substr(max2_ind2-1 );
