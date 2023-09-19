@@ -33,7 +33,8 @@ Suboptimal Target Sequence 1: --A---GTGTGGCC-A-AGG----C-----C-TTTC-GTTC-
 Suboptimal Query Sequence 2: CGAGAA-TG-TGC-CCGAG-GAGG-ACGGGAC-C-CGCTT-C
 0
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
-
+```
+```
 (example 2):
 Top Sequence is called seq4 and Bottom sequence is seq5
 The best Identical Site is at 246th nc which is 30.6667%
@@ -125,11 +126,6 @@ Secondary Sequence 1: CCACCCC-GGCCGGCCGCCCATAGCCAGCCCTCCGTCACCTCTTCACCGCACCCTCGG
 Secondary Sequence 2: TT--CCAAGGAAC------A-GTG-T-----GG-CC-A---AGG-C--CTTTC--G-T---TCCGC--A-----ATGC--ATG--------------------T-TG---GAA-A-----TAG---T-AG----T--T----CTTTCCCT--CCACCTCCCA-ACAATC-C----TT-T-------T-ATTT-A---C--CT-AAAC--TG-----GAG-A-----C-C-TCCA------TTAGGG-C---G----GAAA--G-AG----T---G-GGG--TAAT-G-G-G---A------CCTCT----TCT-TAAGACTGC---TTTGGA-CAC----TATCTTACGCTGATA-TTCAGGCCTCAGGTGGCGATTCTG-ACCTT---G-G-TA-CAGCAA-TTA-C-T--GTGACG--T----AA-TA---AGC-C---G---C-A-ACT-G--GAAG--CG-T-AGA--G-GCGAGA----GGGC-GG-G-CGCTTTA-CGG-C---G--AA--CTC--AGGTAGA---A---TTC-TTC-CT-TT-TC-C-GT--CT---C-TT----TC-TTTT-TATGT-CAC--C-AGGGGA-GGA---C--T--------G-GGTGGC--C--A-AC-CCA---G-AGC-CC-CGAGAGAT-GCTA-GGCTCT-TTCTGTCCCGCCC---T------TCCT--C-TGAC-TGTGTC-TT--G-----A-TT-TCCTAT----T--CTG-AGA--GGCTA---T-TGCT---CA-GCGGTT--T-C-CG---TG---GCAAC-AG-TAA-AG--CGTGGGAATTACAGA-TAAA----TTAAA-A-C-TGT-G-G-AA-C--CCCT-T-TCCTCGGCTG-C-C-GC--CAAG--GTGTT--CGGTCC-T-TC-C--GA-GG--AA-G---------C-TA-AGGCCGCGT--TGGGG-T----G--A-GA--CC---CTCA-CTT-C----A------TCC--GG------T----GAGTAGCA-CCGCGTC-C-G------
 ==================================================================================== 
 
-
-```
- 
-==================================================</br>
 ```
 
 
-```
