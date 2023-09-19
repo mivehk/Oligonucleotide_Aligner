@@ -226,9 +226,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     vector<int> ST2 ;
     bool multi2;
     if(l1>l2 and d2<1){
-        for (int k=1; k<(l1-1); k++){
+        for (int k=0; k<(l1-1); k++){
             //Hopping nucleotides in each k iteration along nucleic acid to find similarity and score.
-            if (k !=1) {temp1 = temp1.substr(1);}
+            if (k !=0) {temp1 = temp1.substr(1);}
             float ps2 = 0;
             float ss2 = 0;
             //dropped fs-printing from here
@@ -242,7 +242,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 }
             }
             //dropped ss-printing from here
-            score2.insert(make_pair(k, static_cast<float>(ps2/l2)));
+            score2.insert(make_pair(k+1, static_cast<float>(ps2/l2)));
            //cout<<static_cast<float>(ps2/l2)<<endl;
         }
         for (const auto& pair : score2) {
@@ -271,7 +271,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout << "The map is empty." << std::endl;
         }
 
-        cout<<"===============Showing_Smith-Waterman_Alignment==============================================="<<endl;
+        cout<<"===============Showing Alignment Using Smith-Waterman==============================================="<<endl;
 
         string swfing1 = fing1.substr(max2_ind2-1 );
         string swfing2 = fing2;
@@ -319,8 +319,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
 
-        std::cout << "swAligned Sequence 1: " << swaligned_seq1 << std::endl;
-        std::cout << "swAligned Sequence 2: " << swaligned_seq2 << std::endl;
+        std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
+        std::cout << "Suboptimal Query Sequence 2: " << swaligned_seq2 << std::endl;
     }
     /*if(l1>l2 and d2<1){
         fing1= fing1.substr(max2_ind2-1 );
@@ -368,8 +368,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     bool multi4;
     int subopt_count;
     if(l1>l2 and d2 >= 1 and r2>0 ){
-        for (int k=1; k<(l1-1) ; k++){
-            if (k!= 1) {temp1 = temp1.substr(1);}
+        for (int k=0; k<(l1-1) ; k++){
+            if (k!= 0) {temp1 = temp1.substr(1);}
             ps4 = 0;
             ss4 = 0;
                 for(int h=0; h < l2 ; h++) {
@@ -384,7 +384,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
             //cout<<endl;
             //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
-            score4.insert(make_pair(k, static_cast<float>(ps4/l2)));
+            score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
             //cout<<static_cast<float>(ps4/l2)<<endl;
         }
         //cout << ss4 <<endl;
@@ -535,7 +535,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
     }
     cout<<endl;
-    cout<<"======================Showing Needleman-Wunsch for suboptimal Alignment===================================================== \n";
+    cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
         cout << "Secondary Sequence 1: " << alignedfing4 << endl;
     cout<<"==================================================================================== \n";
         cout << "Secondary Sequence 2: " << alignedfing2 << endl;
