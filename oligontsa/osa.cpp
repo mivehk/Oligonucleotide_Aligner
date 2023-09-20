@@ -10,6 +10,7 @@
 #include "osa.h"
 #include <vector>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
@@ -267,6 +268,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                     cout<<" in locus " << ST2[i]  <<endl;
                 }
                    //cout << "with score value of " << max2 <<endl;
+                   cout<< ST2.size();
         } else {
             cout << "The map is empty." << std::endl;
         }
@@ -419,7 +421,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout << "The map is empty." << std::endl;
         }
     }
-    cout<<subopt_count<<endl;
+    cout<<"suboptimal tracked on "<<subopt_count<<endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
     //==================Needleman-Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
@@ -460,8 +462,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     cout << "                             Query Sequence: " << nwfing2 << endl <<endl;
     cout<<"====================================Showing Top Candidate Alignment====================================== \n";
 
-        string alignedfing4 = "";
-        string alignedfing2 = "";
+        string alignedfing4= "" ;
+        string alignedfing2 = "" ;
 
         //backtracing
         while (i > 0 || j > 0) {
