@@ -275,7 +275,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
         string swfing1 = fing1.substr(max2_ind2-1 );
         string swfing2 = fing2;
-        std::vector<std::vector<int>> swmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
+        vector<vector<int>> swmatrix(l2 + 1, vector<int>(l1 + 1, 0));
 
         int max_score = 0;
         int max_i = 0;
@@ -286,7 +286,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 int match = swmatrix[i - 1][j - 1] + swScore(swfing1[i-1 ], swfing2[j-1 ]);
                 int gap_seq1 = swmatrix[i - 1][j] + GAP_PENALTY;
                 int gap_seq2 = swmatrix[i][j - 1] + GAP_PENALTY;
-                swmatrix[i][j] = std::max({0, match, gap_seq1, gap_seq2});
+                swmatrix[i][j] = max({0, match, gap_seq1, gap_seq2}); //findMax(match, gap_sep1, gap_Sep2);
 
                 if (swmatrix[i][j] > max_score) {
                     max_score = swmatrix[i][j];
@@ -296,25 +296,25 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
 
-        std::string swaligned_seq1 = "";
-        std::string swaligned_seq2 = "";
+        string swaligned_seq1 = "";
+        string swaligned_seq2 = "";
 
         int swi = max_i; //these two integer need to be swapped? think about why swi = max_j & swj = max_i
         int swj = max_j;
 
         while (swi > 0 && swj > 0 && swmatrix[swi][swj] != 0) {
-            if (swmatrix[swi][swj] == swmatrix[swi - 1][swj - 1] + swScore(swfing1[swi], swfing2[swj ])) {
+            if (swmatrix[swi][swj] == swmatrix[swi - 1][swj - 1] + swScore(swfing1[swi-1], swfing2[swj-1 ])) {
                 swaligned_seq1 = swfing1[swi - 1] + swaligned_seq1;
                 swaligned_seq2 = swfing2[swj - 1] + swaligned_seq2;
                 swi--;
                 swj--;
-            } else if (swmatrix[swi][swj] == swmatrix[swi - 1][swj] + GAP_PENALTY) {
-                swaligned_seq1 = swfing1[swi - 1] + swaligned_seq1;
-                swaligned_seq2 = "-" + swaligned_seq2;
+            } else if (swmatrix[swi][swj] == swmatrix[swi - 1][swj] + GAP_PENALTY) { //insertion
+                swaligned_seq2 = swfing2[swi - 1] + swaligned_seq2;
+                swaligned_seq1 = "-" + swaligned_seq1;
                 swi--;
             } else {
-                swaligned_seq1 = "-" + swaligned_seq1;
-                swaligned_seq2 = swfing2[swj - 1] + swaligned_seq2;
+                swaligned_seq2 = "-" + swaligned_seq2;
+                swaligned_seq1 = swfing1[swj - 1] + swaligned_seq1;
                 swj--;
             }
         }
@@ -457,8 +457,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     cout << "Target Sequence - Chain One: " << nwfing3 << endl;
     cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
     cout<<"============================================================================================================= \n";
-    cout << "Query Sequence: " << nwfing2 << endl <<endl;
-    cout<<"======================Showing Top Candidate Alignment===================================================== \n";
+    cout << "                             Query Sequence: " << nwfing2 << endl <<endl;
+    cout<<"====================================Showing Top Candidate Alignment====================================== \n";
 
         string alignedfing4 = "";
         string alignedfing2 = "";
