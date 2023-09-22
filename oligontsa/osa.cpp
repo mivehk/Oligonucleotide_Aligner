@@ -10,7 +10,7 @@
 #include "osa.h"
 #include <vector>
 #include <map>
-#include <algorithm>
+//#include <algorithm>
 using namespace std;
 
 const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
@@ -218,6 +218,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<<endl;
         cout << "The Identical Site is "<<(static_cast<float>(ps6/l2))*100<<"%"<<endl;
+        cout<< "Both Sequences have "<< l1 <<" ncs"<<endl;
     }
     //===================================================
     //second condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
@@ -268,7 +269,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                     cout<<" in locus " << ST2[i]  <<endl;
                 }
                    //cout << "with score value of " << max2 <<endl;
-                   cout<< ST2.size();
+                   cout<<"Total  occurrence of optimal segment "<<ST2.size()<<" times!"<<endl;
         } else {
             cout << "The map is empty." << std::endl;
         }
@@ -277,7 +278,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
         string swfing1 = fing1.substr(max2_ind2-1 );
         string swfing2 = fing2;
-        vector<vector<int>> swmatrix(l2 + 1, vector<int>(l1 + 1, 0));
+        vector<vector<int> > swmatrix(l2 + 1, vector<int>(l1 + 1, 0));
 
         int max_score = 0;
         int max_i = 0;
@@ -288,7 +289,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 int match = swmatrix[i - 1][j - 1] + swScore(swfing1[i-1 ], swfing2[j-1 ]);
                 int gap_seq1 = swmatrix[i - 1][j] + GAP_PENALTY;
                 int gap_seq2 = swmatrix[i][j - 1] + GAP_PENALTY;
-                swmatrix[i][j] = max({0, match, gap_seq1, gap_seq2}); //findMax(match, gap_sep1, gap_Sep2);
+                swmatrix[i][j] = findMax(match, gap_seq1, gap_seq2); //max({0, match, gap_seq1, gap_seq2});;
 
                 if (swmatrix[i][j] > max_score) {
                     max_score = swmatrix[i][j];
@@ -421,7 +422,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout << "The map is empty." << std::endl;
         }
     }
-    cout<<"suboptimal tracked on "<<subopt_count<<endl;
+    cout<<"Total  occurrence of optimal segment "<<ST4.size()<<" times!"<<endl;
+    cout<<"However, suboptimal tracked on locus "<<subopt_count<<endl;
     cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
     //==================Needleman-Wunsch implementation
     //Steps: initialization, matrix filling, backtracing and score generation.
