@@ -19,7 +19,7 @@ int main() {
     string name1;
     string name2;
 
-    cout<<"Please, Enter full name of your Target sequence(usually longer Fasta file): "<<endl;
+    cout<<"Please, Enter full name of Target sequence (Longer Fasta file): "<<endl;
     cin>> name1;
 /*    if (!isSeqNameValid(name1)) {
         cerr<<"Error:  Invalid file name"<<endl;
@@ -28,7 +28,7 @@ int main() {
         name1 += ".fasta" ;
     }
     cout<<endl;*/
-    cout<<"Please, Enter full name of your Query sequence(Usually shorter Fasta file): "<<endl;
+    cout<<"Please, Enter full name of Query sequence (Shorter Fasta file): "<<endl;
     cin>> name2;
 /*    if (!isSeqNameValid(name2)) {
         cerr<<"Error: Invalid file name"<<endl;
