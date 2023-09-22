@@ -269,7 +269,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                     cout<<" in locus " << ST2[i]  <<endl;
                 }
                    //cout << "with score value of " << max2 <<endl;
-                   cout<<"Total  occurrence of optimal segment "<<ST2.size()<<" times!"<<endl;
+                   cout<<"Total occurrences of optimal segment "<<ST2.size()<<" times!"<<endl;
         } else {
             cout << "The map is empty." << std::endl;
         }
