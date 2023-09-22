@@ -25,13 +25,14 @@ hdcDG-F
 Top Sequence is called hdca and Bottom sequence is hdcDG-F
 The best Identical Site is 92.3077% at multiple loci: 
  in locus 511
-Total  occurrence of optimal segment 1 times!
 ===============Showing Alignment Using Smith-Waterman===============================================
-Suboptimal Target Sequence 1: CCAGGTCAAGGTTATGGTGTATGGTC
-Suboptimal Query Sequence  2: CCTGGTCAAGGCTATGGTGTATGGTC
-Total  occurrence of optimal segment 0 times!
-However, suboptimal tracked on locus 0
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+Query Oligonucleotides one till 26
+C C A G G T C A A G G T T A T G G T G T A T G G T C 
+| | : | | | | | | | | : | | | | | | | | | | | | | | 
+C C T G G T C A A G G C T A T G G T G T A T G G T C 
 
+Suboptimal Target Sequence 1: --A-GGTCAAGG-T-TATGGTGTATGGTC-
+Suboptimal Query Sequence  2: CC-TGGTCAAG-G-CTATGGTGTATGGT-C
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
 
 ```
