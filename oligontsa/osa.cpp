@@ -297,7 +297,6 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
         //==================Needleman-Wunsch implementation
         //Steps: initialization, matrix filling, backtracing and score generation.
-
         //number of rows and colomns are plus one for when we initialize first row/column.
         vector<vector<int> > matrix( l2+1, vector<int>(l1+1, 0));
 
@@ -370,22 +369,33 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
         for(int jm=0; jm < kmer_fing1.length(); jm++){
             if(kmer_fing1[jm] == kmer_fing2[jm]){
-                //cout <<"| ";
                 opt_align = opt_align + '|';
-                //ps4++;
             }else{
-                //cout<<": ";
                 opt_align = opt_align + ':';
-                //ss4++;
             }
         }
 
         kmer_opt = opt_align.find("|||||");
-
         if (kmer_opt != std::string::npos) {
-            cout<<"K-mer found on optimal alignment "<< fing1.substr((max4_ind4+kmer_opt-1), 5) <<endl;
+            cout<<"Five-mer found on optimal alignment "<< fing1.substr((max4_ind4+kmer_opt-1), 5) <<endl;
         } else {
-            cout<<"No K-mer found on optimal sequence"<<endl;
+            cout<<"No Five-mer found on optimal sequence"<<endl;
+        }
+
+        ///=======at this point i want to show the kmer detected on secondary alignment
+        for(int km=0; km < kmer_fing4.length(); km++){
+            if(kmer_fing4[km] == kmer_fing3[km]){
+                subopt_align = subopt_align + '|';
+            }else{
+                subopt_align = subopt_align + ':';
+            }
+        }
+
+        kmer_subopt = subopt_align.find("||||");
+        if (kmer_subopt != std::string::npos) {
+            cout<<"Four-mer found on suboptimal alignment "<< fing1.substr((max4_ind4+kmer_subopt-1), 4) <<endl;
+        } else {
+            cout<<"No Four-mer found on suboptimal sequence"<<endl;
         }
 
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
@@ -646,7 +656,6 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
         std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
     }
-
 
     istrm1.close();
     istrm2.close();
