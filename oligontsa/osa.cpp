@@ -10,6 +10,7 @@
 #include "osa.h"
 #include <vector>
 #include <map>
+#include <stack>
 using namespace std;
 
 const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
@@ -124,14 +125,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int doc = 35;
     int iam = 0;
 
-    /*
+/*
     cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
     cout<<r2 <<endl;
-    */
+*/
 
     /*
      substr hop = 0, 1, ...
@@ -224,6 +225,285 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout << endl;
         cout << "The Identical Site is " << (static_cast<float>(ps6 / l2)) * 100 << "%" << endl;
     }
+
+    //========================================================
+    //fourth condition for when l1 is larger and l2 which is a read larger than 35bp (investigate structural variants e.g., INDEL)
+    //Assists the highest optimal score to NW for best and secondary scores.
+    map <int, float> score4;
+    float max4 = std::numeric_limits<float>::min();
+    int max4_ind4;
+    float ps4 ;
+    float ss4 ;
+    vector <int> ST4 ; //vector records indices of all loci with max identities
+    bool multi4;
+    stack<int> subopt_count; ////record indices of suboptimal seed
+    string opt_align;
+    string subopt_align;
+    size_t kmer_opt;
+    size_t kmer_subopt;
+    if(l1>l2 and d2 >= 1 and r2>0 ){
+        for (int k=0; k<(l1-1) ; k++){
+            if (k!= 0) {temp1 = temp1.substr(1);}
+            ps4 = 0;
+            ss4 = 0;
+                for(int h=0; h < l2 ; h++) {
+                    if (temp1[h] == temp2[h]) {
+                        //cout <<"| ";
+                        ps4++;
+                    } else {
+                        // cout<<"  ";
+                        ss4++;
+                    }
+                }
+            //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
+            //cout<<endl;
+            //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
+            score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
+            //cout<<static_cast<float>(ps4/l2)<<endl;
+        }
+        //cout << ss4 <<endl;
+        //cout<< ps4 << endl;
+        //float max = 0.0;
+        ////subopt_count = 1;
+        ST4.push_back(0);
+        for ( auto &pair : score4) {
+            if (pair.second > max4) {
+                subopt_count.push(ST4[0]); //stack holding indices of subs
+                //cout<<subopt_count<<endl;
+                ST4.clear();
+                max4 = pair.second;
+                max4_ind4 = pair.first;
+                ST4.push_back(max4_ind4); //vector holding indices of maxes
+            } else if ( pair.second == max4 ){
+                subopt_count.push(pair.first);
+                multi4 = true;
+                max4 = pair.second;
+                ST4.push_back(pair.first);
+            }
+            //cout<<pair.first<<endl;
+        }
+        if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
+            cout << "The best Identical Site is at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
+        } else if (max4 != std::numeric_limits<int>::min() and multi4 == true ) {
+            cout << "The best Identical Site is "<< max4*100 <<"% at multiple loci: "<<endl;
+            for ( int i=0 ; i<ST4.size() ; i+=1){
+                cout<<" in locus " << ST4[i]  <<endl;
+            }
+        } else {
+            cout << "The map is empty." << std::endl;
+        }
+
+        cout<<"suboptimal sequence in locus "<<subopt_count.top()<<endl;
+        cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
+        //==================Needleman-Wunsch implementation
+        //Steps: initialization, matrix filling, backtracing and score generation.
+
+        //number of rows and colomns are plus one for when we initialize first row/column.
+        vector<vector<int> > matrix( l2+1, vector<int>(l1+1, 0));
+
+        //initialized first col
+        for(int i=0; i<=l2; i++){
+            matrix[i][0] = i * -1;
+        }
+        //initializing first row
+        for(int j=0; j<= l1; j++){
+            matrix[0][j] = j * -1;
+        }
+        //post initialization matrix filling with insertion-score/deletion-penalty of -1 and match score one & miss penalty -1
+        for (int i = 1; i <= l2; i++) {
+            for (int j = 1; j <= l1; j++) {
+                int scoreDiagonal = matrix[i - 1][j - 1] + isBPMatch(fing1[i-1], fing2[j-1]);
+                int scoreUp = matrix[i - 1][j] - 1; //insertion
+                int scoreLeft = matrix[i][j - 1] - 1; //deletion
+                matrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
+            }
+        }
+
+        //l2(alignedfing2) is query, and l1(alignedl1) is target
+        int i = l2; //n
+        int j = l1;  //m
+
+        string kmer_fing1 = fing1.substr(max4_ind4-1 );
+        string kmer_fing2 = fing2;
+        string kmer_fing3 = fing2;
+        string kmer_fing4 = fing1.substr((subopt_count.top())-1);
+        string nwfing1 = fing1.substr(max4_ind4-1 );
+        string nwfing3 = fing1.substr(0, max4_ind4-2);
+        string nwfing2 = fing2;
+        string nwfing4 = fing1.substr((subopt_count.top())-1); //looking for index which is suboptimal location minus one
+
+        cout << "Target Sequence - Chain One: " << nwfing3 << endl;
+        cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
+        cout<<"============================================================================================================= \n";
+        cout << "Query Sequence: " << nwfing2 << endl <<endl;
+        cout<<"======================Showing Top Candidate Alignment===================================================== \n";
+
+        string alignedfing4 = "";
+        string alignedfing2 = "";
+
+        //backtracing
+        while (i > 0 || j > 0) {
+            //while (i > 0 and j > 0) {
+            //while (i == j and  i > 0 ){
+            if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
+                alignedfing2  = nwfing2[i - 1] + alignedfing2;
+                alignedfing4 = "-" + alignedfing4;
+                i--;
+            } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
+                alignedfing2  = "-" + alignedfing2;
+                alignedfing4 = nwfing4[j - 1] + alignedfing4;
+                j--;
+            } else {
+                alignedfing4  = nwfing4[j - 1] + alignedfing4;
+                alignedfing2 = nwfing2[i - 1] + alignedfing2;
+                i--;
+                j--;
+            }
+        }
+        //}
+
+        ////finding kmer from optimal and suboptimal alignments
+        ////string kmer_fing1 = fing1.substr(max4_ind4-1 );
+        //// string kmer_fing2 = fing2;
+        //// string kmer_fing3 = fing2;
+        //// string kmer_fing4 = fing1.substr((subopt_count.top())-1);
+
+        for(int jm=0; jm < kmer_fing1.length(); jm++){
+            if(kmer_fing1[jm] == kmer_fing2[jm]){
+                //cout <<"| ";
+                opt_align = opt_align + '|';
+                //ps4++;
+            }else{
+                //cout<<": ";
+                opt_align = opt_align + ':';
+                //ss4++;
+            }
+        }
+
+        kmer_opt = opt_align.find("|||||");
+
+        if (kmer_opt != std::string::npos) {
+            cout<<"K-mer found on optimal alignment "<< fing1.substr((max4_ind4+kmer_opt-1), 5) <<endl;
+        } else {
+            cout<<"No K-mer found on optimal sequence"<<endl;
+        }
+
+        cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
+        cout << "Secondary Sequence 1: " << alignedfing4 << endl;
+        cout<<"==================================================================================== \n";
+        cout << "Secondary Sequence 2: " << alignedfing2 << endl;
+        cout<<"==================================================================================== \n";
+
+        float ps4 = 0;
+        float ss4 = 0;
+        //fing1= fing1.substr(max4_ind4-1 );
+        for( int i=0; i<d2; i++){
+            doc = 35 * M;
+            iam = 35 * G;
+            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
+            for(int k=iam; k<doc ; k++){
+                cout << nwfing1[k] << " ";
+            }
+            cout <<endl;
+            for(int k=iam; k<doc ; k++){
+                if(nwfing1[k] == nwfing2[k]){
+                    cout <<"| ";
+                    ////align.push_back('|');
+                    ps4++;
+                }else{
+                    cout<<": ";
+                    ////align.push_back(':');
+                    ss4++;
+                }
+            }
+            cout << endl;
+            for(int k=iam; k<doc ; k++){
+                cout << nwfing2[k] << " ";
+            }
+            cout <<endl;
+            M = M + 1;
+            G = G + 1;
+        }
+        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
+        for(int i=doc ; i<l2; i++){
+            cout<< nwfing1[i] << " ";
+        }
+        cout<<endl;
+        for(int i=doc ; i<l2; i++){
+            if(nwfing1[i] == nwfing2[i]) {
+                cout << "| ";
+                ////align.push_back('|');
+                ps4++;
+            }else{
+                cout<< ": ";
+                ////align.push_back(':');
+                ss4++;
+            }
+        }
+        cout<<endl;
+        for(int i=doc ; i<l2; i++){
+            cout<< nwfing2[i] << " ";
+        }
+        cout<<endl;
+        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
+    }
+
+    /*if(l1>l2 and d2 >= 1 and r2>0){
+        float ps4 = 0;
+        float ss4 = 0;
+        //fing1= fing1.substr(max4_ind4-1 );
+        for( int i=0; i<d2; i++){
+            doc = 35 * M;
+            iam = 35 * G;
+            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
+            for(int k=iam; k<doc ; k++){
+                cout << nwfing1[k] << " ";
+            }
+            cout <<endl;
+            for(int k=iam; k<doc ; k++){
+                if(nwfing1[k] == nwfing2[k]){
+                    cout <<"| ";
+                    ////align.push_back('|');
+                    ps4++;
+                }else{
+                    cout<<": ";
+                    ////align.push_back(':');
+                    ss4++;
+                }
+            }
+            cout << endl;
+            for(int k=iam; k<doc ; k++){
+                cout << nwfing2[k] << " ";
+            }
+            cout <<endl;
+            M = M + 1;
+            G = G + 1;
+        }
+        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
+        for(int i=doc ; i<l2; i++){
+            cout<< nwfing1[i] << " ";
+        }
+        cout<<endl;
+        for(int i=doc ; i<l2; i++){
+            if(nwfing1[i] == nwfing2[i]) {
+                cout << "| ";
+                ////align.push_back('|');
+                ps4++;
+            }else{
+                cout<< ": ";
+                ////align.push_back(':');
+                ss4++;
+            }
+        }
+        cout<<endl;
+        for(int i=doc ; i<l2; i++){
+            cout<< nwfing2[i] << " ";
+        }
+        cout<<endl;
+        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
+    } */
+    cout<<endl;
+
     //===================================================
     //second condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
     map<int, float> score2;
@@ -277,9 +557,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout << "The map is empty." << std::endl;
         }
 
-        cout << "===============Showing Alignment Using Smith-Waterman==============================================="
-             << endl;
-
+        cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
         string swfing1 = fing1.substr(max2_ind2 - 1);
         string swfing3 = fing1.substr(max2_ind2 - 1);
         string swfing2 = fing2;
@@ -329,228 +607,46 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
 
-   // }
-    if (l1 > l2 and d2 < 1) {
-        //fing1 = swfing1.substr(max2_ind2 - 1);
-        float ps2 = 0;
-        float ss2 = 0;
-        cout << "Query Oligonucleotides one till " << l2 << endl;
-        //cout << "do \n";
-        //for (int KM: ST){
-        //int xy = ST2[0];
-        int g = swfing4.length();
-        //cout<<x<<endl;
-        //for( int M = 0 ; M < ST.size() ; M++){
-        for (int i = 0; i < g; i++) {
-            cout << swfing3[i] << " ";
-        }
-        cout << endl;
-        for (int k = 0; k < g; k++) {
-            if (swfing3[k] == swfing4[k]) {
-                cout << "| ";
-                ps2++;
-            } else {
-                cout << ": ";
-                ss2++;
+        // }
+        if (l1 > l2 and d2 < 1) {
+            //fing1 = swfing1.substr(max2_ind2 - 1);
+            float ps2 = 0;
+            float ss2 = 0;
+            cout << "Query Oligonucleotides one till " << l2 << endl;
+            //cout << "do \n";
+            //for (int KM: ST){
+            //int xy = ST2[0];
+            int g = swfing4.length();
+            //cout<<x<<endl;
+            //for( int M = 0 ; M < ST.size() ; M++){
+            for (int i = 0; i < g; i++) {
+                cout << swfing3[i] << " ";
             }
-        }
-        cout << endl;
-        for (int j = 0; j < g; j++) {
-            cout << swfing4[j] << " ";
-        }
-        //}
-        //}
-        cout << endl;
-        //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
-        ST2.clear();
-    }
-        std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
-        std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
-     }
-    //========================================================
-    //fourth condition for when l1 is larger and l2 which is a read larger than 35bp (investigate structural variants e.g., INDEL)
-    //Assists the highest optimal score to NW for best and secondary scores.
-    map <int, float> score4;
-    float max4 = std::numeric_limits<float>::min();
-    int max4_ind4;
-    float ps4 ;
-    float ss4 ;
-    vector <int> ST4 ;
-    bool multi4;
-    int subopt_count;
-    if(l1>l2 and d2 >= 1 and r2>0 ){
-        for (int k=0; k<(l1-1) ; k++){
-            if (k!= 0) {temp1 = temp1.substr(1);}
-            ps4 = 0;
-            ss4 = 0;
-                for(int h=0; h < l2 ; h++) {
-                    if (temp1[h] == temp2[h]) {
-                        //cout <<"| ";
-                        ps4++;
-                    } else {
-                        // cout<<"  ";
-                        ss4++;
-                    }
-                }
-            //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
-            //cout<<endl;
-            //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
-            score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
-            //cout<<static_cast<float>(ps4/l2)<<endl;
-        }
-        //cout << ss4 <<endl;
-        //cout<< ps4 << endl;
-        //float max = 0.0;
-        subopt_count = 1;
-        ST4.push_back(0);
-        for ( auto &pair : score4) {
-            if (pair.second > max4) {
-                subopt_count =  ST4[0];
-                //cout<<subopt_count<<endl;
-                ST4.clear();
-                max4 = pair.second;
-                max4_ind4 = pair.first;
-                ST4.push_back(max4_ind4);
-            } else if ( pair.second == max4 ){
-                subopt_count =  pair.first;
-                multi4 = true;
-                max4 = pair.second;
-                ST4.push_back(pair.first);
-            }
-            //cout<<pair.first<<endl;
-        }
-        if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
-            cout << "The best Identical Site is at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
-        } else if (max4 != std::numeric_limits<int>::min() and multi4 == true ) {
-            cout << "The best Identical Site is "<< max4*100 <<"% at multiple loci: "<<endl;
-            for ( int i=0 ; i<ST4.size() ; i+=1){
-                cout<<" in locus " << ST4[i]  <<endl;
-            }
-        } else {
-            cout << "The map is empty." << std::endl;
-        }
-    }
-    cout<<subopt_count<<endl;
-    cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
-    //==================Needleman-Wunsch implementation
-    //Steps: initialization, matrix filling, backtracing and score generation.
-
-    //number of rows and colomns are plus one for when we initialize first row/column.
-        vector<vector<int> > matrix( l2+1, vector<int>(l1+1, 0));
-
-        //initialized first col
-        for(int i=0; i<=l2; i++){
-            matrix[i][0] = i * -1;
-        }
-        //initializing first row
-        for(int j=0; j<= l1; j++){
-            matrix[0][j] = j * -1;
-        }
-        //post initialization matrix filling with insertion-score/deletion-penalty of -1 and match score one & miss penalty -1
-        for (int i = 1; i <= l2; i++) {
-            for (int j = 1; j <= l1; j++) {
-                int scoreDiagonal = matrix[i - 1][j - 1] + isBPMatch(fing1[i-1], fing2[j-1]);
-                int scoreUp = matrix[i - 1][j] - 1; //insertion
-                int scoreLeft = matrix[i][j - 1] - 1; //deletion
-                matrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
-            }
-        }
-
-        //l2(alignedfing2) is query, and l1(alignedl1) is target
-        int i = l2; //n
-        int j = l1;  //m
-
-        string nwfing1 = fing1.substr(max4_ind4-1 );
-        string nwfing3 = fing1.substr(0, max4_ind4-2);
-        string nwfing2 = fing2;
-        string nwfing4 = fing1.substr(subopt_count-1); //looking for index which is suboptimal location minus one
-
-    cout << "Target Sequence - Chain One: " << nwfing3 << endl;
-    cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
-    cout<<"============================================================================================================= \n";
-    cout << "Query Sequence: " << nwfing2 << endl <<endl;
-    cout<<"======================Showing Top Candidate Alignment===================================================== \n";
-
-        string alignedfing4 = "";
-        string alignedfing2 = "";
-
-        //backtracing
-        while (i > 0 || j > 0) {
-        //while (i > 0 and j > 0) {
-                //while (i == j and  i > 0 ){
-                if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
-                    alignedfing2  = nwfing2[i - 1] + alignedfing2;
-                    alignedfing4 = "-" + alignedfing4;
-                    i--;
-                } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
-                    alignedfing2  = "-" + alignedfing2;
-                    alignedfing4 = nwfing4[j - 1] + alignedfing4;
-                    j--;
+            cout << endl;
+            for (int k = 0; k < g; k++) {
+                if (swfing3[k] == swfing4[k]) {
+                    cout << "| ";
+                    ps2++;
                 } else {
-                    alignedfing4  = nwfing4[j - 1] + alignedfing4;
-                    alignedfing2 = nwfing2[i - 1] + alignedfing2;
-                    i--;
-                    j--;
-                }
-            }
-        //}
-
-    if(l1>l2 and d2 >= 1 and r2>0){
-        float ps4 = 0;
-        float ss4 = 0;
-        //fing1= fing1.substr(max4_ind4-1 );
-        for( int i=0; i<d2; i++){
-            doc = 35 * M;
-            iam = 35 * G;
-            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing1[k] << " ";
-            }
-            cout <<endl;
-            for(int k=iam; k<doc ; k++){
-                if(nwfing1[k] == nwfing2[k]){
-                    cout <<"| ";
-                    ps4++;
-                }else{
-                    cout<<": ";
-                    ss4++;
+                    cout << ": ";
+                    ss2++;
                 }
             }
             cout << endl;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing2[k] << " ";
+            for (int j = 0; j < g; j++) {
+                cout << swfing4[j] << " ";
             }
-            cout <<endl;
-            M = M + 1;
-            G = G + 1;
+            //}
+            //}
+            cout << endl;
+            //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
+            ST2.clear();
         }
-        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing1[i] << " ";
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            if(nwfing1[i] == nwfing2[i]) {
-                cout << "| ";
-                ps4++;
-            }else{
-                cout<< ": ";
-                ss4++;
-            }
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing2[i] << " ";
-        }
-        cout<<endl;
-        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
+
+        std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
+        std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
     }
-    cout<<endl;
-    cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
-        cout << "Secondary Sequence 1: " << alignedfing4 << endl;
-    cout<<"==================================================================================== \n";
-        cout << "Secondary Sequence 2: " << alignedfing2 << endl;
-    cout<<"==================================================================================== \n";
+
 
     istrm1.close();
     istrm2.close();
