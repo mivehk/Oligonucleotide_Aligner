@@ -149,7 +149,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     //string temp2 = alignedfing2;
 
     //=======================================================
-    //first and sixth condition for when oligonucleotides with equal length are compared for similarity. (No-SV)
+    //A condition for when oligonucleotides with equal length are compared for similarity. (No-SV)
     if (l1 == l2 and d1 < 1) {
         float ps1 = 0;
         float ss1 = 0;
@@ -227,7 +227,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     }
 
     //========================================================
-    //fourth condition for when l1 is larger and l2 which is a read larger than 35bp (investigate structural variants e.g., INDEL)
+    //A condition for when l1 is larger and l2 which is a read larger than 35bp (investigate structural variants e.g., INDEL)
     //Assists the highest optimal score to NW for best and secondary scores.
     map <int, float> score4;
     float max4 = std::numeric_limits<float>::min();
@@ -248,15 +248,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             ss4 = 0;
                 for(int h=0; h < l2 ; h++) {
                     if (temp1[h] == temp2[h]) {
-                        //cout <<"| ";
                         ps4++;
                     } else {
-                        // cout<<"  ";
                         ss4++;
                     }
                 }
             //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
-            //cout<<endl;
             //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
             score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
             //cout<<static_cast<float>(ps4/l2)<<endl;
@@ -269,7 +266,6 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         for ( auto &pair : score4) {
             if (pair.second > max4) {
                 subopt_count.push(ST4[0]); //stack holding indices of subs
-                //cout<<subopt_count<<endl;
                 ST4.clear();
                 max4 = pair.second;
                 max4_ind4 = pair.first;
@@ -280,7 +276,6 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 max4 = pair.second;
                 ST4.push_back(pair.first);
             }
-            //cout<<pair.first<<endl;
         }
         if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
             cout << "The best Identical Site is at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
@@ -404,6 +399,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout << "Secondary Sequence 2: " << alignedfing2 << endl;
         cout<<"==================================================================================== \n";
 
+        //if(l1>l2 and d2 >= 1 and r2>0){
         float ps4 = 0;
         float ss4 = 0;
         //fing1= fing1.substr(max4_ind4-1 );
@@ -456,66 +452,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout<<endl;
         cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
+        //}
     }
-
-    /*if(l1>l2 and d2 >= 1 and r2>0){
-        float ps4 = 0;
-        float ss4 = 0;
-        //fing1= fing1.substr(max4_ind4-1 );
-        for( int i=0; i<d2; i++){
-            doc = 35 * M;
-            iam = 35 * G;
-            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing1[k] << " ";
-            }
-            cout <<endl;
-            for(int k=iam; k<doc ; k++){
-                if(nwfing1[k] == nwfing2[k]){
-                    cout <<"| ";
-                    ////align.push_back('|');
-                    ps4++;
-                }else{
-                    cout<<": ";
-                    ////align.push_back(':');
-                    ss4++;
-                }
-            }
-            cout << endl;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing2[k] << " ";
-            }
-            cout <<endl;
-            M = M + 1;
-            G = G + 1;
-        }
-        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing1[i] << " ";
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            if(nwfing1[i] == nwfing2[i]) {
-                cout << "| ";
-                ////align.push_back('|');
-                ps4++;
-            }else{
-                cout<< ": ";
-                ////align.push_back(':');
-                ss4++;
-            }
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing2[i] << " ";
-        }
-        cout<<endl;
-        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
-    } */
     cout<<endl;
 
     //===================================================
-    //second condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
+    //A condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
     map<int, float> score2;
     float max2 = std::numeric_limits<float>::min();
     int max2_ind2 = 0;
