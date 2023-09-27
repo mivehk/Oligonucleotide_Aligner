@@ -19,7 +19,7 @@ int main() {
     string name1;
     string name2;
 
-    cout<<"Please, Enter full name of Target sequence (Longer Fasta file): "<<endl;
+    cout<<"Please, Enter full name of Subject sequence (Longer Fasta file): "<<endl;
     cin>> name1;
 /*    if (!isSeqNameValid(name1)) {
         cerr<<"Error:  Invalid file name"<<endl;

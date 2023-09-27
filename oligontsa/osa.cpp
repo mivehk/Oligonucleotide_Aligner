@@ -11,6 +11,8 @@
 #include <vector>
 #include <map>
 #include <stack>
+#include "printAlign.h"
+
 using namespace std;
 
 const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
@@ -175,55 +177,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout << endl;
         cout << "The Identical Site is " << (static_cast<float>(ps1 / l1)) * 100 << "%" << endl;
     }
+
     if (l2 == l1 and d1 >= 1 and r1 > 0) {
-        float ps6 = 0;
-        float ss6 = 0;
-        //cout<<"shish \n";
-        for (int i = 0; i < d1; i++) {
-            doc = 35 * M;
-            iam = 35 * G;
-            cout << "Line " << i + 1 << " include Query nucleotides " << iam + 1 << " till " << doc << endl;
-            for (int j = iam; j < doc; j++) {
-                cout << fing1[j] << " ";
-            }
-            cout << endl;
-            for (int k = iam; k < doc; k++) {
-                if (fing1[k] == fing2[k]) {
-                    cout << "| ";
-                    ps6++;
-                } else {
-                    cout << ": ";
-                    ss6++;
-                }
-            }
-            cout << endl;
-            for (int a = iam; a < doc; a++) {
-                cout << fing2[a] << " ";
-            }
-            cout << endl;
-            M = M + 1;
-            G = G + 1;
-        }
-        cout << "Line " << d1 + 1 << " include Query nucleotides " << doc + 1 << " till " << l2 << endl;
-        for (int i = doc; i < l1; i++) {
-            cout << fing1[i] << " ";
-        }
-        cout << endl;
-        for (int i = doc; i < l1; i++) {
-            if (fing1[i] == fing2[i]) {
-                cout << "| ";
-                ps6++;
-            } else {
-                cout << "  ";
-                ss6++;
-            }
-        }
-        cout << endl;
-        for (int i = doc; i < l1; i++) {
-            cout << fing2[i] << " ";
-        }
-        cout << endl;
-        cout << "The Identical Site is " << (static_cast<float>(ps6 / l2)) * 100 << "%" << endl;
+        print_Alignment(fing1 , fing2);
     }
 
     //========================================================
@@ -392,67 +348,13 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         } else {
             cout<<"No Four-mer found on suboptimal sequence"<<endl;
         }
-
+        cout<<endl;
+        print_Alignment(nwfing1 , nwfing2); cout<<endl;
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
-        cout << "Secondary Sequence 1: " << alignedfing4 << endl;
+        cout << "Suboptimal Subject Sequence: " << alignedfing4 << endl;
         cout<<"==================================================================================== \n";
-        cout << "Secondary Sequence 2: " << alignedfing2 << endl;
+        cout << "Suboptimal Query Sequence: " << alignedfing2 << endl;
         cout<<"==================================================================================== \n";
-
-        //if(l1>l2 and d2 >= 1 and r2>0){
-        float ps4 = 0;
-        float ss4 = 0;
-        //fing1= fing1.substr(max4_ind4-1 );
-        for( int i=0; i<d2; i++){
-            doc = 35 * M;
-            iam = 35 * G;
-            cout<< "Line "<< i+1 <<" include Query nucleotides "<< iam+1 << " till " << doc <<endl ;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing1[k] << " ";
-            }
-            cout <<endl;
-            for(int k=iam; k<doc ; k++){
-                if(nwfing1[k] == nwfing2[k]){
-                    cout <<"| ";
-                    ////align.push_back('|');
-                    ps4++;
-                }else{
-                    cout<<": ";
-                    ////align.push_back(':');
-                    ss4++;
-                }
-            }
-            cout << endl;
-            for(int k=iam; k<doc ; k++){
-                cout << nwfing2[k] << " ";
-            }
-            cout <<endl;
-            M = M + 1;
-            G = G + 1;
-        }
-        cout<< "Line " <<d2+1 <<" include Query nucleotides "<< doc+1<<" till "<<l2 << endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing1[i] << " ";
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            if(nwfing1[i] == nwfing2[i]) {
-                cout << "| ";
-                ////align.push_back('|');
-                ps4++;
-            }else{
-                cout<< ": ";
-                ////align.push_back(':');
-                ss4++;
-            }
-        }
-        cout<<endl;
-        for(int i=doc ; i<l2; i++){
-            cout<< nwfing2[i] << " ";
-        }
-        cout<<endl;
-        cout << "The Identical Site is "<<(static_cast<float>(ps4/l2))*100 <<"%"<<endl;
-        //}
     }
     cout<<endl;
 
@@ -558,7 +460,6 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
 
-
         // }
         if (l1 > l2 and d2 < 1) {
             //fing1 = swfing1.substr(max2_ind2 - 1);
@@ -595,7 +496,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             ST2.clear();
         }
 
-        std::cout << "Suboptimal Target Sequence 1: " << swaligned_seq1 << std::endl;
+        std::cout << "Suboptimal Subject Sequence 1: " << swaligned_seq1 << std::endl;
         std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
     }
 
