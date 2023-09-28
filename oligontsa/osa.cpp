@@ -195,8 +195,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     stack<int> subopt_count; ////record indices of suboptimal seed
     string opt_align;
     string subopt_align;
-    size_t kmer_opt;
-    size_t kmer_subopt;
+;
     if(l1>l2 and d2 >= 1 and r2>0 ){
         for (int k=0; k<(l1-1) ; k++){
             if (k!= 0) {temp1 = temp1.substr(1);}
@@ -317,36 +316,50 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         //// string kmer_fing2 = fing2;
         //// string kmer_fing3 = fing2;
         //// string kmer_fing4 = fing1.substr((subopt_count.top())-1);
-
-        for(int jm=0; jm < kmer_fing1.length(); jm++){
+        size_t kmer_opt5;
+        size_t kmer_subopt5;
+        size_t kmer_opt4;
+        size_t kmer_subopt4;
+        int count_opt;
+        int count_subopt;
+        ///=======at this point i want to show the kmer detected on primary alignment
+        for(int jm=0; jm < kmer_fing2.length(); jm++){
             if(kmer_fing1[jm] == kmer_fing2[jm]){
                 opt_align = opt_align + '|';
             }else{
                 opt_align = opt_align + ':';
             }
         }
-
-        kmer_opt = opt_align.find("|||||");
-        if (kmer_opt != std::string::npos) {
-            cout<<"Five-mer found on optimal alignment "<< fing1.substr((max4_ind4+kmer_opt-1), 5) <<endl;
-        } else {
-            cout<<"No Five-mer found on optimal sequence"<<endl;
+        kmer_opt5 = opt_align.find("|||||");
+        kmer_opt4 = opt_align.find("||||");
+        if ( kmer_opt5 != std::string::npos) {
+            count_opt = 5;
+            cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt5), count_opt) <<endl;
+        } else if(kmer_opt4 != std::string::npos and kmer_opt5 == std::string::npos) {
+                count_opt = 4;
+                cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt4), count_opt) <<endl;
+        } else if(kmer_opt4 == std::string::npos and kmer_opt5 == std::string::npos) {
+            cout<<"No K-mer found on optimal sequence!"<<endl;
         }
 
         ///=======at this point i want to show the kmer detected on secondary alignment
-        for(int km=0; km < kmer_fing4.length(); km++){
+        for(int km=0; km < kmer_fing3.length(); km++){
             if(kmer_fing4[km] == kmer_fing3[km]){
                 subopt_align = subopt_align + '|';
             }else{
                 subopt_align = subopt_align + ':';
             }
         }
-
-        kmer_subopt = subopt_align.find("||||");
-        if (kmer_subopt != std::string::npos) {
-            cout<<"Four-mer found on suboptimal alignment "<< fing1.substr((max4_ind4+kmer_subopt-1), 4) <<endl;
-        } else {
-            cout<<"No Four-mer found on suboptimal sequence"<<endl;
+        kmer_subopt5 = subopt_align.find("|||||");
+        kmer_subopt4 = subopt_align.find("||||");
+        if ( kmer_subopt5 != std::string::npos) {
+            count_subopt = 5;
+            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt5), count_subopt) <<endl;
+        } else if(kmer_subopt4 != std::string::npos and kmer_subopt5 == std::string::npos) {
+            count_subopt = 4;
+            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt4), count_subopt) <<endl;
+        } else if(kmer_subopt4 == std::string::npos and kmer_subopt5 == std::string::npos) {
+            cout<<"No K-mer found on suboptimal sequence!"<<endl;
         }
         cout<<endl;
         print_Alignment(nwfing1 , nwfing2); cout<<endl;
@@ -416,7 +429,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         string swfing3 = fing1.substr(max2_ind2 - 1);
         string swfing2 = fing2;
         string swfing4 = fing2;
-        std::vector<std::vector<int>> swmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
+        std::vector<std::vector<int> > swmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
 
         int max_score = 0;
         int max_i = 0;
@@ -427,7 +440,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 int match = swmatrix[i - 1][j - 1] + swScore(swfing1[i - 1], swfing2[j - 1]);
                 int gap_seq1 = swmatrix[i - 1][j] + GAP_PENALTY;
                 int gap_seq2 = swmatrix[i][j - 1] + GAP_PENALTY;
-                swmatrix[i][j] = std::max({0, match, gap_seq1, gap_seq2});
+                swmatrix[i][j] = findMax(match, gap_seq1, gap_seq2); //std::max({0, match, gap_seq1, gap_seq2});
 
                 if (swmatrix[i][j] > max_score) {
                     max_score = swmatrix[i][j];
