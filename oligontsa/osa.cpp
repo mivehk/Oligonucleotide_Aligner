@@ -127,14 +127,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int doc = 35;
     int iam = 0;
 
-/*
+
     cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
     cout<<r2 <<endl;
-*/
+
 
     /*
      substr hop = 0, 1, ...
@@ -197,10 +197,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     string subopt_align;
 ;
     if(l1>l2 and d2 >= 1 and r2>0 ){
-        for (int k=0; k<(l1-1) ; k++){
-            if (k!= 0) {temp1 = temp1.substr(1);}
-            ps4 = 0;
-            ss4 = 0;
+        //for (int k=0; k<(l1-1) ; k++){
+        for (int k=0; k<=(l1-12) ; k++){
+                if (k!= 0) {temp1 = temp1.substr(1);}
+                ps4 = 0;
+                ss4 = 0;
                 for(int h=0; h < l2 ; h++) {
                     if (temp1[h] == temp2[h]) {
                         ps4++;
@@ -208,11 +209,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                         ss4++;
                     }
                 }
-            //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
-            //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
-            score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
-            //cout<<static_cast<float>(ps4/l2)<<endl;
-        }
+                //cout<< "Line " <<d2+1 <<" include nucleotides "<< doc+1<<" till "<<l2 << endl;
+                //cout << "The score is "<<static_cast<float>(ps4/l2) <<endl;
+                score4.insert(make_pair(k+1, static_cast<float>(ps4/l2)));
+                //cout<<static_cast<float>(ps4/l2)<<endl;
+            }
+       // }
         //cout << ss4 <<endl;
         //cout<< ps4 << endl;
         //float max = 0.0;
@@ -272,14 +274,18 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         int i = l2; //n
         int j = l1;  //m
 
-        string kmer_fing1 = fing1.substr(max4_ind4-1 );
+        string kmer_fing1 = fing1.substr(max4_ind4-1 ,l2);
         string kmer_fing2 = fing2;
-        string kmer_fing3 = fing2;
-        string kmer_fing4 = fing1.substr((subopt_count.top())-1);
-        string nwfing1 = fing1.substr(max4_ind4-1 );
-        string nwfing3 = fing1.substr(0, max4_ind4-2);
+        //string kmer_fing3 = fing2;
+       /* while ( ! subopt_count.empty()) {
+            cout << subopt_count.top() << " ";
+            subopt_count.pop();
+        }*/
+        //string kmer_fing4 = fing1.substr(subopt_count.top()-1);
+        string nwfing1 = fing1.substr(max4_ind4-1 ,l2);
+        string nwfing3 = fing1.substr(0, max4_ind4-1);
         string nwfing2 = fing2;
-        string nwfing4 = fing1.substr((subopt_count.top())-1); //looking for index which is suboptimal location minus one
+        //string nwfing4 = fing1.substr((subopt_count.top())-1  ); //looking for index which is suboptimal location minus one
 
         cout << "Target Sequence - Chain One: " << nwfing3 << endl;
         cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
@@ -287,7 +293,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout << "Query Sequence: " << nwfing2 << endl <<endl;
         cout<<"======================Showing Top Candidate Alignment===================================================== \n";
 
-        string alignedfing4 = "";
+        string alignedfing1 = "";
         string alignedfing2 = "";
 
         //backtracing
@@ -296,14 +302,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //while (i == j and  i > 0 ){
             if (i > 0 && matrix[i][j] == matrix[i - 1][j] - 1) {
                 alignedfing2  = nwfing2[i - 1] + alignedfing2;
-                alignedfing4 = "-" + alignedfing4;
+                alignedfing1 = "-" + alignedfing1;
                 i--;
             } else if (j > 0 && matrix[i][j] == matrix[i][j - 1] - 1) {
                 alignedfing2  = "-" + alignedfing2;
-                alignedfing4 = nwfing4[j - 1] + alignedfing4;
+                alignedfing1 = nwfing1[j - 1] + alignedfing1;
                 j--;
             } else {
-                alignedfing4  = nwfing4[j - 1] + alignedfing4;
+                alignedfing1  = nwfing1[j - 1] + alignedfing1;
                 alignedfing2 = nwfing2[i - 1] + alignedfing2;
                 i--;
                 j--;
@@ -343,7 +349,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         ///=======at this point i want to show the kmer detected on secondary alignment
-        for(int km=0; km < kmer_fing3.length(); km++){
+ /*       for(int km=0; km < kmer_fing3.length(); km++){
             if(kmer_fing4[km] == kmer_fing3[km]){
                 subopt_align = subopt_align + '|';
             }else{
@@ -361,12 +367,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         } else if(kmer_subopt4 == std::string::npos and kmer_subopt5 == std::string::npos) {
             cout<<"No K-mer found on suboptimal sequence!"<<endl;
         }
-        cout<<endl;
+        cout<<endl;*/
         print_Alignment(nwfing1 , nwfing2); cout<<endl;
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
-        cout << "Suboptimal Subject Sequence: " << alignedfing4 << endl;
+        cout << "Suboptimal Subject Sequence: " << alignedfing1 << endl;
         cout<<"==================================================================================== \n";
-        cout << "Suboptimal Query Sequence: " << alignedfing2 << endl;
+        cout << "Suboptimal Query  Sequence : " << alignedfing2 << endl;
         cout<<"==================================================================================== \n";
     }
     cout<<endl;
@@ -510,7 +516,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         std::cout << "Suboptimal Subject Sequence 1: " << swaligned_seq1 << std::endl;
-        std::cout << "Suboptimal Query Sequence  2: " << swaligned_seq2 << std::endl;
+        std::cout << "Suboptimal  Query Sequence  2: " << swaligned_seq2 << std::endl;
     }
 
     istrm1.close();
