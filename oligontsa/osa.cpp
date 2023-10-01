@@ -12,6 +12,7 @@
 #include <map>
 #include <stack>
 #include "printAlign.h"
+#include <queue>
 
 using namespace std;
 
@@ -128,12 +129,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int iam = 0;
 
 
-    cout<<l1 <<endl;
+/*    cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
-    cout<<r2 <<endl;
+    cout<<r2 <<endl;*/
 
 
     /*
@@ -192,13 +193,13 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     float ss4 ;
     vector <int> ST4 ; //vector records indices of all loci with max identities
     bool multi4;
-    stack<int> subopt_count; ////record indices of suboptimal seed
-    string opt_align;
-    string subopt_align;
+    priority_queue<float> subopt_count4; ////record values of sorted scores
+    string opt_align4;
+    string subopt_align4;
 ;
     if(l1>l2 and d2 >= 1 and r2>0 ){
         //for (int k=0; k<(l1-1) ; k++){
-        for (int k=0; k<=(l1-12) ; k++){
+        for (int k=0; k<=(l1-l2); k++){
                 if (k!= 0) {temp1 = temp1.substr(1);}
                 ps4 = 0;
                 ss4 = 0;
@@ -215,27 +216,30 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 //cout<<static_cast<float>(ps4/l2)<<endl;
             }
        // }
-        //cout << ss4 <<endl;
-        //cout<< ps4 << endl;
-        //float max = 0.0;
-        ////subopt_count = 1;
+        //cout << score4.size() <<endl;
+        ////subopt_count4 = 1;
         ST4.push_back(0);
+//        for ( auto &pair : score4) {
+//            cout<< pair.second <<" at "<< pair.first << endl;
+//        }
         for ( auto &pair : score4) {
             if (pair.second > max4) {
-                subopt_count.push(ST4[0]); //stack holding indices of subs
+                subopt_count4.push(max4); //stack holding indices of subs
                 ST4.clear();
                 max4 = pair.second;
                 max4_ind4 = pair.first;
                 ST4.push_back(max4_ind4); //vector holding indices of maxes
             } else if ( pair.second == max4 ){
-                subopt_count.push(pair.first);
+                //subopt_count4.push(pair.first);
                 multi4 = true;
                 max4 = pair.second;
                 ST4.push_back(pair.first);
+            } else if( pair.second < max4 and pair.second > subopt_count4.top()){
+                subopt_count4.push(pair.second);
             }
         }
         if (max4 != std::numeric_limits<int>::min() and multi4 != true ) {
-            cout << "The best Identical Site is at "<< max4_ind4 << "th nc which is " <<max4*100<<"%"<<endl;
+            cout << "The best Identical Site is at "<< max4_ind4 << "th nc which hits " <<max4*100<<"%"<<endl;
         } else if (max4 != std::numeric_limits<int>::min() and multi4 == true ) {
             cout << "The best Identical Site is "<< max4*100 <<"% at multiple loci: "<<endl;
             for ( int i=0 ; i<ST4.size() ; i+=1){
@@ -244,8 +248,15 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         } else {
             cout << "The map is empty." << std::endl;
         }
+        //finding the locus from subopt value
+        int locus4;
+        for (auto &pair : score4){
+            if (pair.second == subopt_count4.top()){
+                locus4 = pair.first;
+            }
+        }
 
-        cout<<"suboptimal sequence in locus "<<subopt_count.top()<<endl;
+        cout<<"suboptimal sequence score is "<<(subopt_count4.top())*100<<"% in locus "<<locus4<<endl;
         cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
         //==================Needleman-Wunsch implementation
         //Steps: initialization, matrix filling, backtracing and score generation.
@@ -276,16 +287,16 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
 
         string kmer_fing1 = fing1.substr(max4_ind4-1 ,l2);
         string kmer_fing2 = fing2;
-        //string kmer_fing3 = fing2;
-       /* while ( ! subopt_count.empty()) {
-            cout << subopt_count.top() << " ";
-            subopt_count.pop();
-        }*/
-        //string kmer_fing4 = fing1.substr(subopt_count.top()-1);
+        string kmer_fing3 = fing2;
+//        while ( ! subopt_count4.empty()) {
+//            cout << subopt_count4.top() << " kayvon "<<endl;
+//            subopt_count4.pop();
+//        }
+        string kmer_fing4 = fing1.substr(subopt_count4.top()-1);
         string nwfing1 = fing1.substr(max4_ind4-1 ,l2);
         string nwfing3 = fing1.substr(0, max4_ind4-1);
         string nwfing2 = fing2;
-        //string nwfing4 = fing1.substr((subopt_count.top())-1  ); //looking for index which is suboptimal location minus one
+        //string nwfing4 = fing1.substr((subopt_count4.top())-1  ); //looking for index which is suboptimal location minus one
 
         cout << "Target Sequence - Chain One: " << nwfing3 << endl;
         cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
@@ -321,50 +332,50 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         ////string kmer_fing1 = fing1.substr(max4_ind4-1 );
         //// string kmer_fing2 = fing2;
         //// string kmer_fing3 = fing2;
-        //// string kmer_fing4 = fing1.substr((subopt_count.top())-1);
-        size_t kmer_opt5;
-        size_t kmer_subopt5;
-        size_t kmer_opt4;
-        size_t kmer_subopt4;
-        int count_opt;
-        int count_subopt;
+        //// string kmer_fing4 = fing1.substr((subopt_count4.top())-1);
+        int kmer_opt_five;
+        int kmer_subopt_five;
+        int kmer_opt_four;
+        int kmer_subopt_four;
+        int count_opt4;
+        int count_subopt4;
         ///=======at this point i want to show the kmer detected on primary alignment
         for(int jm=0; jm < kmer_fing2.length(); jm++){
             if(kmer_fing1[jm] == kmer_fing2[jm]){
-                opt_align = opt_align + '|';
+                opt_align4 = opt_align4 + '|';
             }else{
-                opt_align = opt_align + ':';
+                opt_align4 = opt_align4 + ':';
             }
         }
-        kmer_opt5 = opt_align.find("|||||");
-        kmer_opt4 = opt_align.find("||||");
-        if ( kmer_opt5 != std::string::npos) {
-            count_opt = 5;
-            cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt5), count_opt) <<endl;
-        } else if(kmer_opt4 != std::string::npos and kmer_opt5 == std::string::npos) {
-                count_opt = 4;
-                cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt4), count_opt) <<endl;
-        } else if(kmer_opt4 == std::string::npos and kmer_opt5 == std::string::npos) {
+        kmer_opt_five = opt_align4.find("|||||");
+        kmer_opt_four = opt_align4.find("||||");
+        if ( kmer_opt_five != std::string::npos) {
+            count_opt4 = 5;
+            cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_five), count_opt4) <<endl;
+        } else if(kmer_opt_four != std::string::npos and kmer_opt_five == std::string::npos) {
+                count_opt4 = 4;
+                cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_four), count_opt4) <<endl;
+        } else if(kmer_opt_four == std::string::npos and kmer_opt_five == std::string::npos) {
             cout<<"No K-mer found on optimal sequence!"<<endl;
         }
 
         ///=======at this point i want to show the kmer detected on secondary alignment
- /*       for(int km=0; km < kmer_fing3.length(); km++){
+       /* for(int km=0; km < kmer_fing3.length(); km++){
             if(kmer_fing4[km] == kmer_fing3[km]){
-                subopt_align = subopt_align + '|';
+                subopt_align4 = subopt_align4 + '|';
             }else{
-                subopt_align = subopt_align + ':';
+                subopt_align4 = subopt_align4 + ':';
             }
         }
-        kmer_subopt5 = subopt_align.find("|||||");
-        kmer_subopt4 = subopt_align.find("||||");
-        if ( kmer_subopt5 != std::string::npos) {
-            count_subopt = 5;
-            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt5), count_subopt) <<endl;
-        } else if(kmer_subopt4 != std::string::npos and kmer_subopt5 == std::string::npos) {
-            count_subopt = 4;
-            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt4), count_subopt) <<endl;
-        } else if(kmer_subopt4 == std::string::npos and kmer_subopt5 == std::string::npos) {
+        kmer_subopt_five = subopt_align4.find("|||||");
+        kmer_subopt_four = subopt_align4.find("||||");
+        if ( kmer_subopt_five != std::string::npos) {
+            count_subopt4 = 5;
+            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_five), count_subopt4) <<endl;
+        } else if(kmer_subopt_four != std::string::npos and kmer_subopt_five == std::string::npos) {
+            count_subopt4 = 4;
+            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_four), count_subopt4) <<endl;
+        } else if(kmer_subopt_four == std::string::npos and kmer_subopt_five == std::string::npos) {
             cout<<"No K-mer found on suboptimal sequence!"<<endl;
         }
         cout<<endl;*/
@@ -384,8 +395,11 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int max2_ind2 = 0;
     vector<int> ST2;
     bool multi2;
+    priority_queue<float> subopt_count2;
+    string opt_align2;
+    string suboptalign2;
     if (l1 > l2 and d2 < 1) {
-        for (int k = 0; k < (l1 - 1); k++) {
+        for (int k = 0; k <= (l1 - l2); k++) {
             //Hopping nucleotides in each k iteration along nucleic acid to find similarity and score.
             if (k != 0) { temp1 = temp1.substr(1); }
             float ps2 = 0;
@@ -404,8 +418,10 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             score2.insert(make_pair(k + 1, static_cast<float>(ps2 / l2)));
             //cout<<static_cast<float>(ps2/l2)<<endl;
         }
+        ST2.push_back(0);
         for (const auto &pair: score2) {
             if (pair.second > max2) {
+                subopt_count2.push(max2);
                 ST2.clear();
                 max2 = pair.second;
                 max2_ind2 = pair.first;
@@ -414,12 +430,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 multi2 = true;
                 max2 = pair.second;
                 ST2.push_back(pair.first);
+            } else if(pair.second <max2 and pair.second > subopt_count2.top()){
+                subopt_count2.push(pair.second);
             }
             //cout<<pair.first<<endl;
         }
         //index 0 in seq is nc one which is at zero hop, so k one is at first bit
         if (max2 != std::numeric_limits<int>::min() and multi2 != true) {
-            cout << "The best Identical Site is at " << max2_ind2 << "th nc which is " << max2 * 100 << "%" << endl;
+            cout << "The best Identical Site is at " << max2_ind2 << "th nc which hits " << max2 * 100 << "%" << endl;
         } else if (max2 != std::numeric_limits<int>::min() and multi2 == true) {
             cout << "The best Identical Site is " << max2 * 100 << "% at multiple loci: " << endl;
             for (int i = 0; i < ST2.size(); i += 1) {
@@ -429,7 +447,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         } else {
             cout << "The map is empty." << std::endl;
         }
-
+        //finding the locus from subopt value
+        int locus2;
+        for (auto &pair : score2){
+            if (pair.second == subopt_count2.top()){
+                locus2 = pair.first;
+            }
+        }
+        cout<<"suboptimal sequence score is "<<(subopt_count2.top())*100<<"% in locus "<<locus2<<endl;
         cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
         string swfing1 = fing1.substr(max2_ind2 - 1);
         string swfing3 = fing1.substr(max2_ind2 - 1);
