@@ -129,12 +129,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int iam = 0;
 
 
-/*    cout<<l1 <<endl;
+    cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
-    cout<<r2 <<endl;*/
+    cout<<r2 <<endl;
 
 
     /*
@@ -177,10 +177,168 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
         cout << endl;
         cout << "The Identical Site is " << (static_cast<float>(ps1 / l1)) * 100 << "%" << endl;
+
+        cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
+        string eqswfing1 = fing1;
+        string eqswfing2 = fing2;
+
+        std::vector<std::vector<int> > eqswmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
+
+        int eqmax_score = 0;
+        int eqmax_i = 0;
+        int eqmax_j = 0;
+
+        for (int i = 1; i <= l2; i++) {
+            for (int j = 1; j <= l1; j++) {
+                int match = eqswmatrix[i - 1][j - 1] + swScore(eqswfing1[i - 1], eqswfing2[j - 1]);
+                int gap_seq1 = eqswmatrix[i - 1][j] + GAP_PENALTY;
+                int gap_seq2 = eqswmatrix[i][j - 1] + GAP_PENALTY;
+                eqswmatrix[i][j] = findMax(match, gap_seq1, gap_seq2); //std::max({0, match, gap_seq1, gap_seq2});
+
+                if (eqswmatrix[i][j] > eqmax_score) {
+                    eqmax_score = eqswmatrix[i][j];
+                    eqmax_i = i;
+                    eqmax_j = j;
+                }
+            }
+        }
+
+        std::string eqswaligned_seq1 = "";
+        std::string eqswaligned_seq2 = "";
+
+        int eqswi = eqmax_i; //these two integer need to be swapped? think about why swi = max_j & swj = max_i
+        int eqswj = eqmax_j;
+
+        while (eqswi > 0 && eqswj > 0 && eqswmatrix[eqswi][eqswj] != 0) {
+            if (eqswmatrix[eqswi][eqswj] == eqswmatrix[eqswi - 1][eqswj - 1] + swScore(eqswfing1[eqswi], eqswfing2[eqswj])) {
+                eqswaligned_seq1 = eqswfing1[eqswi - 1] + eqswaligned_seq1;
+                eqswaligned_seq2 = eqswfing2[eqswj - 1] + eqswaligned_seq2;
+                eqswi--;
+                eqswj--;
+            } else if (eqswmatrix[eqswi][eqswj] == eqswmatrix[eqswi - 1][eqswj] + GAP_PENALTY) {
+                eqswaligned_seq1 = eqswfing1[eqswi - 1] + eqswaligned_seq1;
+                eqswaligned_seq2 = "-" + eqswaligned_seq2;
+                eqswi--;
+            } else {
+                eqswaligned_seq1 = "-" + eqswaligned_seq1;
+                eqswaligned_seq2 = eqswfing2[eqswj - 1] + eqswaligned_seq2;
+                eqswj--;
+            }
+        }
+        std::cout << "Suboptimal Subject Sequence 1: " << eqswaligned_seq1 << std::endl;
+        std::cout << "Suboptimal  Query Sequence  2: " << eqswaligned_seq2 << std::endl;
     }
 
     if (l2 == l1 and d1 >= 1 and r1 > 0) {
+        string eqopt_align;
         print_Alignment(fing1 , fing2);
+
+        //==================Needleman-Wunsch implementation for equal length reads ==================
+        //Steps: initialization, matrix filling, backtracing and score generation.
+        //number of rows and colomns are plus one for when we initialize first row/column.
+        vector<vector<int> > eqmatrix( l2+1, vector<int>(l1+1, 0));
+
+        //initialized first col
+        for(int i=0; i<=l2; i++){
+            eqmatrix[i][0] = i * -1;
+        }
+        //initializing first row
+        for(int j=0; j<= l1; j++){
+            eqmatrix[0][j] = j * -1;
+        }
+        //post initialization matrix filling with insertion-score/deletion-penalty of -1 and match score one & miss penalty -1
+        for (int i = 1; i <= l2; i++) {
+            for (int j = 1; j <= l1; j++) {
+                int scoreDiagonal = eqmatrix[i - 1][j - 1] + isBPMatch(fing1[i-1], fing2[j-1]);
+                int scoreUp = eqmatrix[i - 1][j] - 1; //insertion
+                int scoreLeft = eqmatrix[i][j - 1] - 1; //deletion
+                eqmatrix[i][j] = findMax(scoreDiagonal, scoreUp, scoreLeft);
+            }
+        }
+
+        //l2(alignedfing2) is query, and l1(alignedl1) is target
+        int i = l2; //n
+        int j = l1;  //m
+
+        //string kmer_fing1 = fing1.substr(max4_ind4-1 ,l2);
+        //string kmer_fing2 = fing2;
+        //string kmer_fing3 = fing2;
+//        while ( ! subopt_count4.empty()) {
+//            cout << subopt_count4.top() << " kayvon "<<endl;
+//            subopt_count4.pop();
+//        }
+        //string kmer_fing4 = fing1.substr(subopt_count4.top()-1);
+        string eqnwfing1 = fing1;
+       // string nwfing3 = fing1.substr(0, max4_ind4-1);
+        string eqnwfing2 = fing2;
+        //string nwfing4 = fing1.substr((subopt_count4.top())-1  ); //looking for index which is suboptimal location minus one
+
+        //cout << "Target Sequence - Chain One: " << nwfing3 << endl;
+        //cout << "Target Sequence - Chain Two Included Anchor: " << nwfing1 << endl;
+        //cout<<"============================================================================================================= \n";
+        //cout << "Query Sequence: " << nwfing2 << endl <<endl;
+       // cout<<"======================Showing Top Candidate Alignment===================================================== \n";
+
+        string eqalignedfing1 = "";
+        string eqalignedfing2 = "";
+
+        //backtracing
+        while (i > 0 || j > 0) {
+            //while (i > 0 and j > 0) {
+            //while (i == j and  i > 0 ){
+            if (i > 0 && eqmatrix[i][j] == eqmatrix[i - 1][j] - 1) {
+                eqalignedfing2  = eqnwfing2[i - 1] + eqalignedfing2;
+                eqalignedfing1 = "-" + eqalignedfing1;
+                i--;
+            } else if (j > 0 && eqmatrix[i][j] == eqmatrix[i][j - 1] - 1) {
+                eqalignedfing2  = "-" + eqalignedfing2;
+                eqalignedfing1 = eqnwfing1[j - 1] + eqalignedfing1;
+                j--;
+            } else {
+                eqalignedfing1  = eqnwfing1[j - 1] + eqalignedfing1;
+                eqalignedfing2 = eqnwfing2[i - 1] + eqalignedfing2;
+                i--;
+                j--;
+            }
+        }
+        //}
+
+        ////finding kmer from optimal and suboptimal alignments
+        ////string kmer_fing1 = fing1.substr(max4_ind4-1 );
+        //// string kmer_fing2 = fing2;
+        //// string kmer_fing3 = fing2;
+        //// string kmer_fing4 = fing1.substr((subopt_count4.top())-1);
+        int eqkmer_opt_five;
+        //int eqkmer_subopt_five;
+        int eqkmer_opt_four;
+        //int eqkmer_subopt_four;
+        int eqcount_opt4;
+        int eqcount_subopt4;
+        ///=======at this point i want to show the kmer detected on primary alignment
+        for(int jm=0; jm < eqnwfing2.length(); jm++){
+            if(eqnwfing1[jm] == eqnwfing2[jm]){
+                eqopt_align = eqopt_align + '|';
+            }else{
+                eqopt_align = eqopt_align + ':';
+            }
+        }
+        eqkmer_opt_five = eqopt_align.find("|||||");
+        eqkmer_opt_four = eqopt_align.find("||||");
+        if ( eqkmer_opt_five != std::string::npos) {
+            eqcount_opt4 = 5;
+            cout<<"K-mer found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4) <<endl;
+        } else if(eqkmer_opt_four != std::string::npos and eqkmer_opt_five == std::string::npos) {
+            eqcount_opt4 = 4;
+            cout<<"K-mer found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_four), eqcount_opt4) <<endl;
+        } else if(eqkmer_opt_four == std::string::npos and eqkmer_opt_five == std::string::npos) {
+            cout<<"No K-mer found on optimal sequence!"<<endl;
+        }
+
+        cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
+        cout << "Suboptimal Subject Sequence: " << eqalignedfing1 << endl;
+        cout<<"==================================================================================== \n";
+        cout << "Suboptimal Query  Sequence : " << eqalignedfing2 << endl;
+        cout<<"==================================================================================== \n";
     }
 
     //========================================================
