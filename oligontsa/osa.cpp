@@ -129,12 +129,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int iam = 0;
 
 
+/*
     cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
     cout<<r2 <<endl;
+*/
 
 
     /*
@@ -225,8 +227,9 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 eqswj--;
             }
         }
-        std::cout << "Suboptimal Subject Sequence 1: " << eqswaligned_seq1 << std::endl;
-        std::cout << "Suboptimal  Query Sequence  2: " << eqswaligned_seq2 << std::endl;
+        //std::cout << "Suboptimal Subject Sequence 1: " << eqswaligned_seq1 << std::endl;
+        //std::cout << "Suboptimal  Query Sequence  2: " << eqswaligned_seq2 << std::endl;
+        print_Alignment(eqswaligned_seq1 , eqswaligned_seq2); cout<<endl;
     }
 
     if (l2 == l1 and d1 >= 1 and r1 > 0) {
@@ -334,11 +337,26 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout<<"No K-mer found on optimal sequence!"<<endl;
         }
 
+        cout<<"Complementary RNA Primer can be: ";
+        string seeds = eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4);
+        for(int i=0 ; i< seeds.length(); i++){
+            if (seeds[i]=='A'){
+                cout<<"U";
+            } else if(seeds[i]=='T'){
+                cout<<"A";
+            }else if( seeds[i]=='G'){
+                cout<<"C";
+            } else if(seeds[i]=='C'){
+                cout<<"G";
+            }
+        }
+        cout<<endl;
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
-        cout << "Suboptimal Subject Sequence: " << eqalignedfing1 << endl;
+        //cout << "Suboptimal Subject Sequence: " << eqalignedfing1 << endl;
         cout<<"==================================================================================== \n";
-        cout << "Suboptimal Query  Sequence : " << eqalignedfing2 << endl;
+        //cout << "Suboptimal Query  Sequence : " << eqalignedfing2 << endl;
         cout<<"==================================================================================== \n";
+        print_Alignment(eqalignedfing1, eqalignedfing2); cout<<endl;
     }
 
     //========================================================
@@ -517,6 +535,21 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout<<"No K-mer found on optimal sequence!"<<endl;
         }
 
+        cout<<"Complementary RNA Primer can be: ";
+        string seeds = kmer_fing1.substr((kmer_opt_four), count_opt4);
+        for(int i=0 ; i< seeds.length(); i++){
+            if (seeds[i]=='A'){
+                cout<<"U";
+            } else if(seeds[i]=='T'){
+                cout<<"A";
+            }else if( seeds[i]=='G'){
+                cout<<"C";
+            } else if(seeds[i]=='C'){
+                cout<<"G";
+            }
+        }
+        cout<<endl;
+
         ///=======at this point i want to show the kmer detected on secondary alignment
        /* for(int km=0; km < kmer_fing3.length(); km++){
             if(kmer_fing4[km] == kmer_fing3[km]){
@@ -537,12 +570,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             cout<<"No K-mer found on suboptimal sequence!"<<endl;
         }
         cout<<endl;*/
-        print_Alignment(nwfing1 , nwfing2); cout<<endl;
+        print_Alignment(nwfing1 , nwfing2);cout<<endl;
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
-        cout << "Suboptimal Subject Sequence: " << alignedfing1 << endl;
+        //cout << "Suboptimal Subject Sequence: " << alignedfing1 << endl;
         cout<<"==================================================================================== \n";
-        cout << "Suboptimal Query  Sequence : " << alignedfing2 << endl;
+        //cout << "Suboptimal Query  Sequence : " << alignedfing2 << endl;
         cout<<"==================================================================================== \n";
+        print_Alignment(alignedfing1, alignedfing2);
+        cout<<endl;
     }
     cout<<endl;
 
@@ -613,7 +648,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
         cout<<"suboptimal sequence score is "<<(subopt_count2.top())*100<<"% in locus "<<locus2<<endl;
-        cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
+        //"===============Alignment Using Smith-Waterman============================================="<<endl;
         string swfing1 = fing1.substr(max2_ind2 - 1);
         string swfing3 = fing1.substr(max2_ind2 - 1);
         string swfing2 = fing2;
@@ -697,9 +732,10 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
             ST2.clear();
         }
-
+        cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
         std::cout << "Suboptimal Subject Sequence 1: " << swaligned_seq1 << std::endl;
         std::cout << "Suboptimal  Query Sequence  2: " << swaligned_seq2 << std::endl;
+        //print_Alignment(swaligned_seq1, swaligned_seq2);
     }
 
     istrm1.close();
