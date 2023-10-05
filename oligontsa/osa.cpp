@@ -55,14 +55,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     string fing1;
     string fing2;
 
-    cout << "Top Sequence is called " << sequ1 << " and Bottom sequence is " << sequ2 << endl;
+    cout << "Top sequence is called " << sequ1 << " and bottom sequence is " << sequ2 << endl;
     ifstream istrm1;
     ifstream istrm2;
     //ofstream out_stream1;
     //ofstream out_stream2;
     istrm1.open(abspath + sequ1);
     if (istrm1.fail()) {
-        cout << "input of first file failed. \n";
+        cout << "Input of first file failed. \n";
         exit(1);
     };
     istrm2.open(abspath + sequ2);
@@ -158,7 +158,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     if (l1 == l2 and d1 < 1) {
         float ps1 = 0;
         float ss1 = 0;
-        cout << "oligonucleotides one till " << l1 << endl;
+        cout << "Oligonucleotides one till " << l1 << endl;
         //cout << "yek \n";
         for (int i = 0; i < l2; i++) {
             cout << fing1[i] << " ";
@@ -329,12 +329,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         eqkmer_opt_four = eqopt_align.find("||||");
         if ( eqkmer_opt_five != std::string::npos) {
             eqcount_opt4 = 5;
-            cout<<"K-mer found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4) <<endl;
+            cout<<"The Seed found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4) <<endl;
         } else if(eqkmer_opt_four != std::string::npos and eqkmer_opt_five == std::string::npos) {
             eqcount_opt4 = 4;
-            cout<<"K-mer found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_four), eqcount_opt4) <<endl;
+            cout<<"The Seed found on optimal alignment is: "<< eqnwfing1.substr((eqkmer_opt_four), eqcount_opt4) <<endl;
         } else if(eqkmer_opt_four == std::string::npos and eqkmer_opt_five == std::string::npos) {
-            cout<<"No K-mer found on optimal sequence!"<<endl;
+            cout<<"No seed found on optimal sequence!"<<endl;
         }
 
         cout<<"Complementary RNA Primer can be: ";
@@ -432,7 +432,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             }
         }
 
-        cout<<"suboptimal sequence score is "<<(subopt_count4.top())*100<<"% in locus "<<locus4<<endl;
+        cout<<"Suboptimal sequence score is "<<(subopt_count4.top())*100<<"% in locus "<<locus4<<endl;
         cout<<">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n";
         //==================Needleman-Wunsch implementation
         //Steps: initialization, matrix filling, backtracing and score generation.
@@ -527,12 +527,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         kmer_opt_four = opt_align4.find("||||");
         if ( kmer_opt_five != std::string::npos) {
             count_opt4 = 5;
-            cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_five), count_opt4) <<endl;
+            cout<<"The Seed found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_five), count_opt4) <<endl;
         } else if(kmer_opt_four != std::string::npos and kmer_opt_five == std::string::npos) {
                 count_opt4 = 4;
-                cout<<"K-mer found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_four), count_opt4) <<endl;
+                cout<<"The Seed found on optimal alignment is: "<< kmer_fing1.substr((kmer_opt_four), count_opt4) <<endl;
         } else if(kmer_opt_four == std::string::npos and kmer_opt_five == std::string::npos) {
-            cout<<"No K-mer found on optimal sequence!"<<endl;
+            cout<<"No seed found on optimal sequence!"<<endl;
         }
 
         cout<<"Complementary RNA Primer can be: ";
@@ -562,12 +562,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         kmer_subopt_four = subopt_align4.find("||||");
         if ( kmer_subopt_five != std::string::npos) {
             count_subopt4 = 5;
-            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_five), count_subopt4) <<endl;
+            cout<<"seed found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_five), count_subopt4) <<endl;
         } else if(kmer_subopt_four != std::string::npos and kmer_subopt_five == std::string::npos) {
             count_subopt4 = 4;
-            cout<<"K-mer found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_four), count_subopt4) <<endl;
+            cout<<"seed found on suboptimal alignment is: "<< kmer_fing4.substr((kmer_subopt_four), count_subopt4) <<endl;
         } else if(kmer_subopt_four == std::string::npos and kmer_subopt_five == std::string::npos) {
-            cout<<"No K-mer found on suboptimal sequence!"<<endl;
+            cout<<"No seed found on suboptimal sequence!"<<endl;
         }
         cout<<endl;*/
         print_Alignment(nwfing1 , nwfing2);cout<<endl;
@@ -582,7 +582,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     cout<<endl;
 
     //===================================================
-    //A condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., k-mers)
+    //A condition for when l1 is larger and l2 is a seed smaller than 35bp(e.g., seeds)
     map<int, float> score2;
     float max2 = std::numeric_limits<float>::min();
     int max2_ind2 = 0;
@@ -647,7 +647,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 locus2 = pair.first;
             }
         }
-        cout<<"suboptimal sequence score is "<<(subopt_count2.top())*100<<"% in locus "<<locus2<<endl;
+        //cout<<"Suboptimal sequence score is "<<(subopt_count2.top())*100<<"% in locus "<<locus2<<endl;
         //"===============Alignment Using Smith-Waterman============================================="<<endl;
         string swfing1 = fing1.substr(max2_ind2 - 1);
         string swfing3 = fing1.substr(max2_ind2 - 1);
@@ -732,6 +732,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
             //cout << "The calculated score is "<<static_cast<float>(ps2/l2) <<endl;
             ST2.clear();
         }
+        cout<<"Suboptimal sequence score is "<<(subopt_count2.top())*100<<"% in locus "<<locus2<<endl;
         cout << "===============Showing Alignment Using Smith-Waterman============================================="<<endl;
         std::cout << "Suboptimal Subject Sequence 1: " << swaligned_seq1 << std::endl;
         std::cout << "Suboptimal  Query Sequence  2: " << swaligned_seq2 << std::endl;
