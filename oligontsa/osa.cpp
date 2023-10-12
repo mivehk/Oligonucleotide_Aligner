@@ -14,6 +14,7 @@
 #include "printAlign.h"
 #include <queue>
 
+
 using namespace std;
 
 const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
@@ -129,14 +130,12 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int iam = 0;
 
 
-/*
-    cout<<l1 <<endl;
+/*    cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
     cout<<r1 <<endl;
-    cout<<r2 <<endl;
-*/
+    cout<<r2 <<endl;*/
 
 
     /*
@@ -146,15 +145,14 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
      (Max_ind increments only if score g8t max and it is one plus hops)
     */
 
-    //=======================started conditional printing==============================
-
+    ////=======================started conditional statements==============================
     string temp1 = fing1;
     string temp2 = fing2;
     //string temp1 = alignedfing1;
     //string temp2 = alignedfing2;
 
     //=======================================================
-    //A condition for when oligonucleotides with equal length are compared for similarity. (No-SV)
+    //A condition for when two oligonucleotides with equal length are compared. (No-SV)
     if (l1 == l2 and d1 < 1) {
         float ps1 = 0;
         float ss1 = 0;
@@ -184,18 +182,19 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         string eqswfing1 = fing1;
         string eqswfing2 = fing2;
 
-        std::vector<std::vector<int> > eqswmatrix(l2 + 1, std::vector<int>(l1 + 1, 0));
+        std::vector<std::vector<int> > eqswmatrix(l1 + 1, std::vector<int>(l2 + 1, 0));
 
         int eqmax_score = 0;
         int eqmax_i = 0;
         int eqmax_j = 0;
 
-        for (int i = 1; i <= l2; i++) {
-            for (int j = 1; j <= l1; j++) {
+        for (int i = 1; i <= l1; ++i) {
+            for (int j = 1; j <= l2; ++j) {
                 int match = eqswmatrix[i - 1][j - 1] + swScore(eqswfing1[i - 1], eqswfing2[j - 1]);
                 int gap_seq1 = eqswmatrix[i - 1][j] + GAP_PENALTY;
                 int gap_seq2 = eqswmatrix[i][j - 1] + GAP_PENALTY;
-                eqswmatrix[i][j] = findMax(match, gap_seq1, gap_seq2); //std::max({0, match, gap_seq1, gap_seq2});
+                //eqswmatrix[i][j] = findMax(match, gap_seq1, gap_seq2);
+                eqswmatrix[i][j] =std::max({0, match, gap_seq1, gap_seq2});
 
                 if (eqswmatrix[i][j] > eqmax_score) {
                     eqmax_score = eqswmatrix[i][j];
@@ -208,28 +207,33 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         std::string eqswaligned_seq1 = "";
         std::string eqswaligned_seq2 = "";
 
-        int eqswi = eqmax_i; //these two integer need to be swapped? think about why swi = max_j & swj = max_i
+        int eqswi = eqmax_i; //these two values how highest score cell in our matrix
         int eqswj = eqmax_j;
+/*        cout<< eqmax_score<<endl;
+        cout<< eqmax_i<<endl;
+        cout<< eqmax_j<<endl;
+        cout<< eqswfing1[eqswj] <<endl;
+        cout<< eqswfing2[eqswi] <<endl;*/
 
         while (eqswi > 0 && eqswj > 0 && eqswmatrix[eqswi][eqswj] != 0) {
-            if (eqswmatrix[eqswi][eqswj] == eqswmatrix[eqswi - 1][eqswj - 1] + swScore(eqswfing1[eqswi], eqswfing2[eqswj])) {
+            if (eqswmatrix[eqswi][eqswj] == eqswmatrix[eqswi - 1][eqswj - 1] + swScore(eqswfing1[eqswi-1],eqswfing2[eqswj-1])) {
                 eqswaligned_seq1 = eqswfing1[eqswi - 1] + eqswaligned_seq1;
                 eqswaligned_seq2 = eqswfing2[eqswj - 1] + eqswaligned_seq2;
-                eqswi--;
-                eqswj--;
+                --eqswi;
+                --eqswj;
             } else if (eqswmatrix[eqswi][eqswj] == eqswmatrix[eqswi - 1][eqswj] + GAP_PENALTY) {
                 eqswaligned_seq1 = eqswfing1[eqswi - 1] + eqswaligned_seq1;
                 eqswaligned_seq2 = "-" + eqswaligned_seq2;
-                eqswi--;
+                --eqswi;
             } else {
                 eqswaligned_seq1 = "-" + eqswaligned_seq1;
                 eqswaligned_seq2 = eqswfing2[eqswj - 1] + eqswaligned_seq2;
-                eqswj--;
+                --eqswj;
             }
         }
-        //std::cout << "Suboptimal Subject Sequence 1: " << eqswaligned_seq1 << std::endl;
-        //std::cout << "Suboptimal  Query Sequence  2: " << eqswaligned_seq2 << std::endl;
-        print_Alignment(eqswaligned_seq1 , eqswaligned_seq2); cout<<endl;
+        std::cout << "Suboptimal Subject Sequence 1: " << eqswaligned_seq1 << std::endl;
+        std::cout << "Suboptimal  Query Sequence  2: " << eqswaligned_seq2 << std::endl;
+        //print_Alignment(eqswaligned_seq1 , eqswaligned_seq2); cout<<endl;
     }
 
     if (l2 == l1 and d1 >= 1 and r1 > 0) {
@@ -664,7 +668,8 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
                 int match = swmatrix[i - 1][j - 1] + swScore(swfing1[i - 1], swfing2[j - 1]);
                 int gap_seq1 = swmatrix[i - 1][j] + GAP_PENALTY;
                 int gap_seq2 = swmatrix[i][j - 1] + GAP_PENALTY;
-                swmatrix[i][j] = findMax(match, gap_seq1, gap_seq2); //std::max({0, match, gap_seq1, gap_seq2});
+                //swmatrix[i][j] = findMax(match, gap_seq1, gap_seq2);
+                swmatrix[i][j] = std::max({0, match, gap_seq1, gap_seq2});
 
                 if (swmatrix[i][j] > max_score) {
                     max_score = swmatrix[i][j];
