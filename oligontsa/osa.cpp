@@ -130,7 +130,7 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
     int iam = 0;
 
 
-/*    cout<<l1 <<endl;
+ /*   cout<<l1 <<endl;
     cout<<l2 <<endl;
     cout<<d1 <<endl;
     cout<<d2 <<endl;
@@ -342,19 +342,32 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         cout<<"Complementary RNA Primer can be: ";
+        string head1;
         string seeds = eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4);
         for(int i=0 ; i< seeds.length(); i++){
             if (seeds[i]=='A'){
                 cout<<"U";
+                head1.insert(head1.length(),"U");
             } else if(seeds[i]=='T'){
                 cout<<"A";
+                head1.insert(head1.length(),"A");
             }else if( seeds[i]=='G'){
                 cout<<"C";
+                head1.insert(head1.length(),"C");
             } else if(seeds[i]=='C'){
                 cout<<"G";
+                head1.insert(head1.length(),"G");
             }
         }
         cout<<endl;
+        cout<< "{" <<endl;
+        //cout<< "  [" << endl;
+        //cout<< "    \"locus\": \""<< max4_ind4 <<"\"," << " \"score\": \""<<max4 *100<<"%" <<"\","<<endl ;
+        //cout<< "    \"locus\": \""<< locus4 <<"\"," << " \"score\": \""<<(subopt_count4.top())*100<<"%" <<"\""<<endl ;
+       // cout<< "  ]," <<endl;
+        cout<< "   \"seed\": \"" << eqnwfing1.substr((eqkmer_opt_five), eqcount_opt4)<< "\","<<endl;
+        cout<< "   \"primer\": \"" << head1<< "\""<<endl;
+        cout<< "}" <<endl;
         cout<<"====================== Needleman-Wunsch for suboptimal Alignment===================================================== \n";
         //cout << "Suboptimal Subject Sequence: " << eqalignedfing1 << endl;
         cout<<"==================================================================================== \n";
@@ -540,19 +553,33 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         }
 
         cout<<"Complementary RNA Primer can be: ";
+        string head4;
         string seeds = kmer_fing1.substr((kmer_opt_four), count_opt4);
         for(int i=0 ; i< seeds.length(); i++){
             if (seeds[i]=='A'){
                 cout<<"U";
+                head4.insert(head4.length(),"U");
             } else if(seeds[i]=='T'){
                 cout<<"A";
+                head4.insert(head4.length(),"A");
             }else if( seeds[i]=='G'){
                 cout<<"C";
+                head4.insert(head4.length(),"C");
             } else if(seeds[i]=='C'){
                 cout<<"G";
+                head4.insert(head4.length(),"G");
             }
         }
         cout<<endl;
+
+        cout<< "{" <<endl;
+        cout<< "  [" << endl;
+        cout<< "    \"locus\": \""<< max4_ind4 <<"\"," << " \"score\": \""<<max4 *100<<"%" <<"\","<<endl ;
+        cout<< "    \"locus\": \""<< locus4 <<"\"," << " \"score\": \""<<(subopt_count4.top())*100<<"%" <<"\""<<endl ;
+        cout<< "  ]," <<endl;
+        cout<< "   \"seed\": \"" << kmer_fing1.substr((kmer_opt_four), count_opt4)<< "\","<<endl;
+        cout<< "   \"primer\": \"" << head4<< "\""<<endl;
+        cout<< "}" <<endl;
 
         ///=======at this point i want to show the kmer detected on secondary alignment
        /* for(int km=0; km < kmer_fing3.length(); km++){
