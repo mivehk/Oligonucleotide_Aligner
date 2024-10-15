@@ -13,11 +13,14 @@
 #include <stack>
 #include "printAlign.h"
 #include <queue>
-
+#include <filesystem>
 
 using namespace std;
+//namespace fs = std::__fs::filesystem;
 
-const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
+//const string abspath="/Users/kmive/Desktop/GWU/Summer-2023/HSCI-6273/WK05/oligontsa/";
+const string abspath="/Users/kmive/Desktop/GWU/MSHS-Biomedical-informatics/Summer-2023/HSCI-6273/WK05/oligontsa/";
+//const string abspath= fs::current_path();
 
 int count_lines(ifstream& file){
     int lc =0;
@@ -573,9 +576,13 @@ void compare_sequences(string sequ1 ,string sequ2 ) {
         cout<<endl;
 
         cout<< "{" <<endl;
-        cout<< "  [" << endl;
-        cout<< "    \"locus\": \""<< max4_ind4 <<"\"," << " \"score\": \""<<max4 *100<<"%" <<"\","<<endl ;
-        cout<< "    \"locus\": \""<< locus4 <<"\"," << " \"score\": \""<<(subopt_count4.top())*100<<"%" <<"\""<<endl ;
+        cout<< " \"loci\": [" << endl;
+        cout<< "{" ;
+        cout<< "    \"locus\": \""<< max4_ind4 <<"\"," << " \"score\": \""<<max4 *100<<"%"  ;
+        cout<< "}," <<endl;
+        cout<< "{" ;
+        cout<< "    \"locus\": \""<< locus4 <<"\"," << " \"score\": \""<<(subopt_count4.top())*100<<"%" <<"\"" ;
+        cout<< "}" << endl;
         cout<< "  ]," <<endl;
         cout<< "   \"seed\": \"" << kmer_fing1.substr((kmer_opt_four), count_opt4)<< "\","<<endl;
         cout<< "   \"primer\": \"" << head4<< "\""<<endl;
